@@ -1,0 +1,74 @@
+﻿@model DemoDaysApplication.ViewModels.CheckOut_ViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CheckOut</h2>
+
+<h4></h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CheckOut">
+            @*not sure if correct*@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*@foreach (var product in Model.products)
+                {*@
+            <h4>Product: @Model.ProductName<h4>
+            <hr />
+            <ul>
+                @for (int i = 0; i < Model.productInstances.Count; i++)
+                {
+
+                    <li> @Model.productInstances[i].Name </li>
+
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="productInstances[i].CheckedOut" /> Checked Out?
+                            </label>
+                        </div>
+                    </div>
+
+                    //find out which one of the two below manages to pass the customer ids to the CustomerIds list, if either
+
+                    @*<div class="editor-field"> would like toget this working so can have a default unselected entry, in fact have to, but this does not pass the value of the customer ids to the controller, perhaps the CustomerId in quotes could be changed? or maybe it is actually I hvent checked because the other dropdwon goes below this so i dunno if this is passing or not because it would always be overruled
+                            <label asp-for="CustomerIds[i]" class="control-label">Customer</label>
+                            <br />
+                            @Html.DropDownList("CustomerId", Model.CustomerList, "Select Customer", new { @class = "form-control" })
+                        </div>
+                        <hr />*@
+
+                    <div class="form-group">
+                        <span class="control-label">Customer: </span>
+                        <select asp-for="CustomerIds[i]" asp-items="@Model.CustomerList" class="form-control"></select>
+                    </div>
+                    <hr />
+                    //not sure if i'm supposed to be hiding these
+                    <input type="hidden" asp-for="@Model.productInstances[i].Name" />
+                    <input type="hidden" asp-for="@Model.productInstances[i].ProductId" />
+                    <input type="hidden" asp-for="@Model.productInstances[i].ProductKitId" />
+                    <input type="hidden" asp-for="@Model.productInstances[i].Id" />
+                }
+
+            </ul>
+            <hr />
+            @*}*@
+            <input type="hidden" asp-for="@Model.EventId" />
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId">Back to Event</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

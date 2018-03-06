@@ -1,0 +1,247 @@
+﻿@model DemoDaysApplication.ViewModels.Event_ViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<h4>Event: @Model.Name</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <hr />
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="IsActive" /> <b>Event Active?</b>
+                    </label>
+                </div>
+            </div>
+            <hr />
+
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TerritoryId" class="control-label">Territory</label>
+                <br />
+                @Html.DropDownList("TerritoryId", Model.TerritoryList, new { @class = "form-control" })
+                <br />
+
+                <label asp-for="StateId" class="control-label">State</label>
+                @Html.DropDownList("StateId", Enumerable.Empty<SelectListItem>(), "States", new { @disabled = "disabled", @class = "form-control" })
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RepId" class="control-label">Rep</label>
+                <div>
+                    <select asp-for="RepId" asp-items="@Model.RepList" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RequestedShipDate" class="control-label"></label>
+                <input asp-for="RequestedShipDate" class="form-control" />
+                <span asp-validation-for="RequestedShipDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LocationAddress" class="control-label"></label>
+                <input asp-for="LocationAddress" class="form-control" />
+                <span asp-validation-for="LocationAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LocationZipCode" class="control-label"></label>
+                <input asp-for="LocationZipCode" class="form-control" />
+                <span asp-validation-for="LocationZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippingAddress" class="control-label"></label>
+                <input asp-for="ShippingAddress" class="form-control" />
+                <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippingZipCode" class="control-label"></label>
+                <input asp-for="ShippingZipCode" class="form-control" />
+                <span asp-validation-for="ShippingZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactName" class="control-label"></label>
+                <input asp-for="ContactName" class="form-control" />
+                <span asp-validation-for="ContactName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactNumber" class="control-label"></label>
+                <input asp-for="ContactNumber" class="form-control" />
+                <span asp-validation-for="ContactNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EstimatedNumberSpectators" class="control-label"></label>
+                <input asp-for="EstimatedNumberSpectators" class="form-control" />
+                <span asp-validation-for="EstimatedNumberSpectators" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ActualNumberSpectators" class="control-label"></label>
+                <input asp-for="ActualNumberSpectators" class="form-control" />
+                <span asp-validation-for="ActualNumberSpectators" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EstimatedNumberCompetitors" class="control-label"></label>
+                <input asp-for="EstimatedNumberCompetitors" class="form-control" />
+                <span asp-validation-for="EstimatedNumberCompetitors" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ActualNumberCompetitors" class="control-label"></label>
+                <input asp-for="ActualNumberCompetitors" class="form-control" />
+                <span asp-validation-for="ActualNumberCompetitors" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Notes" class="control-label"></label>
+                <input asp-for="Notes" class="form-control" />
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeckUrl" class="control-label"></label><span> *don't include http://</span>
+                <input asp-for="DeckUrl" class="form-control" />
+                <span asp-validation-for="DeckUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="IsRetailer" /> <b>Event at a Retailer?</b>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="GymName" class="control-label"></label>
+                <input asp-for="GymName" class="form-control" />
+                <span asp-validation-for="GymName" class="text-danger"></span>
+            </div>
+
+            <h5><b>Swag Items:</b></h5>
+            @for (int i = 0; i < Model.Event_SwagItems.Count; i++)
+            {
+                @Model.Event_SwagItems[i].SwagItemName
+                <span> Qty: </span>
+                <div class="form-group">
+                    <input asp-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="form-control" />
+                    <span asp-validation-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="text-danger"></span>
+                </div>
+
+                //and then the hidden stuff
+
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].Id" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityGivenAway" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemId" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemName" />
+                </div>
+            }
+            <br />
+
+            <h5><b>Booth Items:</b></h5>
+            @for (int i = 0; i < Model.Event_BoothItems.Count; i++)
+            {
+                @Model.Event_BoothItems[i].BoothItemName
+                <span> Qty: </span>
+                <div class="form-group">
+                    <input asp-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="form-control" />
+                    <span asp-validation-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="text-danger"></span>
+                </div>
+
+                //and then the hidden stuff:
+
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].Id" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemId" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemName" />
+                </div>
+            }
+            <br />
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#TerritoryId').change(function () {
+                $.ajax({
+                    url: '/Events/StatesByTerritory',
+                    type: 'POST',
+                    data: { territoryId: $(this).val() },
+                    datatype: 'json',
+                    success: function (data) {
+                        var options = '';
+                        $.each(data, function () {
+                            options += '<option value="' + this.id + '">' + this.state + '</option>';
+                        });
+                        $('#StateId').prop('disabled', false).html(options);
+                    }
+                });
+            });
+
+            $.ajax({
+                url: '/Events/StatesByTerritory',
+                type: 'POST',
+                data: { territoryId: @Model.TerritoryId },
+                datatype: 'json',
+                success: function (data) {
+                    var options = '';
+                    $.each(data, function () {
+                        options += '<option value="' + this.id + '">' + this.state + '</option>';
+                    });
+                    $('#StateId').prop('disabled', false).html(options);
+                    $('#StateId').val(@Model.StateId);
+                }
+            });
+
+        });
+    </script>
+}

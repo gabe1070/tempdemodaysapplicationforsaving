@@ -1,0 +1,36 @@
+﻿@model DemoDaysApplication.ViewModels.CategoryDetails_ViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Category Details</h2>
+
+
+<hr />
+
+<h4>
+    Category: 
+    <b>
+        @Html.DisplayFor(model => model.Name)
+    </b>
+</h4>
+
+
+
+
+
+<h5><b>Product Types In This Category:</b></h5>
+
+@for (int i = 0; i < Model.ProductTypes.Count; i++)
+{
+    <span>@(i + 1))</span>
+    @Model.ProductTypes[i].Name
+    <br />
+}
+<hr />
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

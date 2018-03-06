@@ -1,0 +1,68 @@
+﻿@model DemoDaysApplication.ViewModels.CustomerDetails_ViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Customer</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            FirstName
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Customer_ViewModel.FirstName)
+        </dd>
+        <dt>
+            LastName
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Customer_ViewModel.LastName)
+        </dd>
+        <dt>
+            Email
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Customer_ViewModel.Email)
+        </dd>
+        <dt>
+            PhoneNumber
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Customer_ViewModel.PhoneNumber)
+        </dd>
+        <dt>
+            Notes
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Customer_ViewModel.Notes)
+        </dd>
+    </dl>
+</div>
+
+@if (Model.Customer_ViewModel.HasItemsCheckedOut == true)
+{
+    <hr />
+    <div>
+        <h4>Checked Out Products:</h4>
+        <ul>
+            @foreach (var productInstance in Model.ProductInstance_ViewModels)
+            {
+                <li>@productInstance.Name</li>
+            }
+        </ul>
+    </div>
+
+    <a asp-controller="Customers" asp-action="CheckIn" asp-route-customerId="@Model.Customer_ViewModel.Id">Check In This Customer</a>
+}
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Customer_ViewModel.Id">Edit</a> |
+    <a asp-action="Index" asp-route-eventId="@Model.Customer_ViewModel.EventId">Back to List</a>
+</div>
+
+

@@ -1,0 +1,58 @@
+﻿@model DemoDaysApplication.ViewModels.CheckIn_ViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CheckOut</h2>
+
+<h4></h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CheckIn">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <h4>Customer Checking In: @Model.CustomerName</h4>
+            <hr />
+            @*what do I need to hide here?*@
+            <ul>
+                @for (int i = 0; i < Model.productInstances.Count; i++)
+                {
+
+                    <li> @Model.productInstances[i].Name </li>
+
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="productInstances[i].CheckedOut" /> Checked Out?
+                            </label>
+                        </div>
+                    </div>
+
+                    <input type="hidden" asp-for="@Model.productInstances[i].Name" />
+                    <input type="hidden" asp-for="@Model.productInstances[i].ProductId" />
+                    <input type="hidden" asp-for="@Model.productInstances[i].ProductKitId" />
+                    <input type="hidden" asp-for="@Model.productInstances[i].Id" />
+                }
+                <input type="hidden" asp-for="@Model.CustomerName" />
+                <input type="hidden" asp-for="@Model.CustomerId" />
+
+            </ul>
+            <hr />
+
+            <div class="form-group">
+                <input type="submit" value="Check In" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

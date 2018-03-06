@@ -1,0 +1,88 @@
+﻿@*@model IEnumerable<DemoDaysApplication.ViewModels.Customer_ViewModel>*@
+@model DemoDaysApplication.ViewModels.CustomerIndex_ViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index of Customers For @Model.EventName</h2>
+<p><i>*<span style="color:green">green name</span> = customer <b>does not</b> have items checked out</i></p>
+<p><i>*<span style="color:red">red name</span> = customer <b>does</b> have items checked out</i></p>
+
+<p>
+    <a asp-action="Details" asp-controller="Events" asp-route-id="@Model.EventId">Return To Event</a>
+</p>
+<p>
+    <a asp-controller="Customers" asp-action="Create" asp-route-eventId="@Model.EventId">Add Customer To This Event</a>
+</p>
+
+@*<p>only create from event details pages
+        <a asp-action="Create">Create New</a>
+    </p>*@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Last Name
+            </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Phone Number
+            </th>
+            <th>
+                Notes
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Customer_ViewModels)
+        {
+            <tr>
+                <td>
+                    @if (item.HasItemsCheckedOut == true)
+                    {
+                        <span style="color:red">@Html.DisplayFor(modelItem => item.LastName)</span>
+                    }
+                    @if (item.HasItemsCheckedOut == false)
+                    {
+                        <span style="color:green"> @Html.DisplayFor(modelItem => item.LastName)</span>
+                    }
+                </td>
+                <td>
+                    @if (item.HasItemsCheckedOut == true)
+                    {
+                        <span style="color:red">@Html.DisplayFor(modelItem => item.FirstName)</span>
+                    }
+                    @if (item.HasItemsCheckedOut == false)
+                    {
+                        <span style="color:green"> @Html.DisplayFor(modelItem => item.FirstName)</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" asp-route-eventId="@item.EventId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Details" asp-controller="Events" asp-route-id="@Model.EventId">Return To Event</a>
+</div>

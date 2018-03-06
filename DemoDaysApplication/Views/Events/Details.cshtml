@@ -1,0 +1,245 @@
+﻿@model DemoDaysApplication.ViewModels.EventDetails_ViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Event_ViewModel.Name</h2>
+
+<div class="col-lg-6">
+    <div>
+        <h4>Event</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Event_ViewModel.Name)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.Name)
+            </dd>
+            <dt>
+                Start Date
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.StartDate)
+            </dd>
+            <dt>
+                End Date
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.EndDate)
+            </dd>
+            <dt>
+                Requested Ship Date
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.RequestedShipDate)
+            </dd>
+            <dt>
+                Rep
+            </dt>
+            <dd>
+                @Model.Event_ViewModel.RepName
+            </dd>
+            <dt>
+                Territory
+            </dt>
+            <dd>
+                @Model.Event_ViewModel.TerritoryName
+            </dd>
+            <dt>
+                State
+            </dt>
+            <dd>
+                @Model.Event_ViewModel.StateName
+            </dd>
+            <dt>
+                Location Address
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.LocationAddress)
+            </dd>
+            <dt>
+                Location Zip Code
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.LocationZipCode)
+            </dd>
+            <dt>
+                Shipping Adress
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.ShippingAddress)
+            </dd>
+            <dt>
+                Shipping Zip Code
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.ShippingZipCode)
+            </dd>
+            <dt>
+                Contact name
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.ContactName)
+            </dd>
+            <dt>
+                Contact Number
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.ContactNumber)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Event_ViewModel.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.Email)
+            </dd>
+            <dt>
+                Estim. # Spectators
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.EstimatedNumberSpectators)
+            </dd>
+            <dt>
+                Actual # Spectators
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.ActualNumberSpectators)
+            </dd>
+            <dt>
+                Estim. # Competitors
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.EstimatedNumberCompetitors)
+            </dd>
+            <dt>
+                Actual # Competitors
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.ActualNumberCompetitors)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Event_ViewModel.Notes)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.Notes)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Event_ViewModel.DeckUrl)
+            </dt>
+            <dd>
+                <a href="http://@Model.Event_ViewModel.DeckUrl.ToString()">@Html.DisplayFor(model => model.Event_ViewModel.DeckUrl)</a>
+            </dd>
+
+            <dt>
+                Files
+            </dt>
+            <dd>
+                
+            </dd>
+
+            <dt>
+                Retailer?
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.IsRetailer)
+            </dd>
+            <dt>
+                Gym Name?
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.GymName)
+            </dd>
+        </dl>
+    </div>
+
+
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Event_ViewModel.Id">Edit Event</a> |
+        <a asp-action="Index">Back to List</a> |
+        @*<a asp-controller="ProductKits" asp-action="ChooseStyle" asp-route-eventId="@Model.Event_ViewModel.Id">Add Product Kit</a> |*@
+        <a asp-controller="Customers" asp-action="Create" asp-route-eventId="@Model.Event_ViewModel.Id">Add Customer</a> | 
+        <a asp-controller="Customers" asp-action="Index" asp-route-eventId="@Model.Event_ViewModel.Id">Customers Index</a>
+
+    </div>
+</div>
+
+
+<div class="col-lg-6">
+    <h4>Swag And Booth Items</h4>
+    <hr />
+    <h5>Swag Items:</h5>
+    <dl class="dl-horizontal">
+
+        @foreach (var swagItem in Model.Event_SwagItems)
+        {
+            <div>
+                <dt>
+                    @swagItem.SwagItemName
+                </dt>
+                <dd>
+                    @swagItem.QuantityBroughtToEvent
+                </dd>
+            </div>
+        }
+    </dl>
+
+    <h5>Booth Items:</h5>
+    <dl class="dl-horizontal">
+
+        @foreach (var boothItem in Model.Event_BoothItems)
+        {
+            <div>
+                <dt>
+                    @boothItem.BoothItemName
+                </dt>
+                <dd>
+                    @boothItem.QuantityAtEvent
+                </dd>
+            </div>
+        }
+    </dl>
+</div>
+
+
+<div style="float:left" class="col-slg-12">
+    
+    <h4 style="float:left" class="col-slg-12">Product Kits</h4>
+    <br /><hr class="col-slg-12"/>
+    @foreach (var kit in Model.ProductKit_ViewModels)
+    {
+        <div style="float:left; padding-bottom:20px; margin:20px" class="col-lg-3">
+
+            <table style="border:1px solid black; padding: 4px; border-spacing:5px; margin: 15px" class="col-lg-4">
+                <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                    <td style="border:1px solid black; padding: 4px; border-spacing:5px;" colspan="3"><div style="min-width:250px">@kit.Name</div></td>
+                </tr>
+
+                <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                    <th style="border:1px solid black; padding: 4px; border-spacing:5px">Product</th>
+                    <th style="border:1px solid black; padding: 4px; border-spacing:5px">Total Qty.</th>
+                    <th style="border:1px solid black; padding: 4px; border-spacing:5px">Qty. Available</th>
+                </tr>
+
+                @for (int i = 0; i < kit.Quantities.Length; i++)
+                {
+                    <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                        <td style="border:1px solid black; padding: 4px; border-spacing:5px"><a asp-controller="ProductKits" asp-action="CheckOut" asp-route-eventId="@kit.EventId" asp-route-styleId="@kit.StyleId" asp-route-productId="@kit.ProductIds[i]">@kit.ProductNames[i]</a></td>
+                        <td style="border:1px solid black; padding: 4px; border-spacing:5px">@kit.Quantities[i]</td>
+                        <td style="border:1px solid black; padding: 4px; border-spacing:5px">@kit.QuantitiesAvailable[i]</td>
+                    </tr>
+                }
+            </table>
+            <td>
+                @*<a asp-action="Edit" asp-controller="ProductKits" asp-route-id="@kit.Id">Edit Product Kit</a> |not a single product kit so can't use these anymore
+                <a asp-action="Details" asp-controller="ProductKits" asp-route-id="@kit.Id">Details</a> |
+                <a asp-action="Delete" asp-controller="ProductKits" asp-route-id="@kit.Id">Delete</a> |*@
+                @*<a asp-controller="ProductKits" asp-action="CheckOut" asp-route-productKitId="@kit.Id">CheckOut</a>*@@*make sure that this event id is getting passed in correctly*@
+            </td>
+        </div>
+    }
+</div>
+
+

@@ -1,0 +1,87 @@
+﻿@model DemoDaysApplication.ViewModels.ProductKit_ViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit ProductKit</h2>
+
+<h4 style="color:red">Read This:</h4>
+<p>
+    this edit page is just for changing the quantities of each product in the product kit. If you want altogether different products
+    in this kit, then you need to edit the style from which this product kit was made, and then come back to the product kits index and edit this 
+    product kit to add instances to it based on the new product options.
+    </p>
+<p>
+    Also, this edit will clear out all of the existing product instances of this product kit, and associated productinstance_customer entries, and reset all product instances
+    to checked out = false. So, don't do this during an event. Make sure that you have your product kits, with the right quantity of products, all ready before you go to an
+    event and start checking things out.
+</p>
+
+<h4>ProductKit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="hidden" asp-for="EventId" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="StyleId" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="TerritoryId" />
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" asp-for="Name" />
+            </div>
+
+            <h3>@Model.Name</h3>
+            <table style="border:1px solid black; padding: 4px; border-spacing:5px">
+                <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                    <th style="border:1px solid black; padding: 4px; border-spacing:5px">Product SKU</th>
+                    <th style="border:1px solid black; padding: 4px; border-spacing:5px">Desired Quantity in Kit</th>
+                </tr>
+
+                @for (int i = 0; i < Model.ProductNames.Count(); i++)
+                {
+                    <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                        <td style="border:1px solid black; padding: 4px; border-spacing:5px">
+                            @Model.ProductNames[i]
+                        </td>
+                        <td style="border:1px solid black; padding: 4px; border-spacing:5px">
+                            <input asp-for="@Model.Quantities[i]" class="form-control" />@*i may have to add hidden values here for all of the product info itself? becuase i'm passing the product in does that mean that the products actual values are lost? shoud I only be passing in a product id and name and then on the other side use the product id to just get all the info back from the context?*@
+                        </td>
+
+                    </tr>
+
+                    <div class="form-group">
+                        <input type="hidden" asp-for="ProductIds[i]" />
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="ProductNames[i]" />
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="QuantitiesAvailable[i]" />@*not sure if this needs to be hidden*@
+                    </div>
+                }
+            </table>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Submit Edit" asp-controller="ProductKits" asp-action="Edit" class="btn btn-default" />@*not sure if this is going to go to the right edit*@
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

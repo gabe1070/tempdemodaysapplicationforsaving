@@ -1,0 +1,44 @@
+﻿@model DemoDaysApplication.Models.Style
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<p><b style="color:red">Warning!</b> Deleting a style will delete all of its products, 
+    all of it's associated product kits, and all of 
+    the product instances and customer_instance and 
+    product checkout information associated with those kits. 
+    You <i>will</i> lose data. It may also potentially cause unforeseen errors.
+    Only do this if the style is definitely 
+    no longer being used, and checkout and customer tracking 
+    data for all of its kits is no longer needed. If you simply don't want it to be
+    available for making kits from anymore in Event > Details > Add ProductKit, just edit this style and uncheck
+    IsActive.</p>
+<div>
+    <h4>Style</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductTypeId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProductTypeId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

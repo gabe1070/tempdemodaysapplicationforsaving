@@ -1,0 +1,90 @@
+﻿@model DemoDaysApplication.ViewModels.ProductKit_ViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+<h4>ProductKit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateGet">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <input type="hidden" asp-for="EventId" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="StyleId" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="TerritoryId" />
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" asp-for="Name" />
+            </div>
+
+            <h3>@Model.Name</h3>
+            <table style="border:1px solid black; padding: 4px; border-spacing:5px">
+                <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                    <th style="border:1px solid black; padding: 4px; border-spacing:5px">Product SKU</th>
+                    <th style="border:1px solid black; padding: 4px; border-spacing:5px">Desired Quantity in Kit</th>
+                </tr>
+                @*@foreach (KeyValuePair<Product, int> product in Model.ProductQuantityDictionary)
+                    {
+                        <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                            <td style="border:1px solid black; padding: 4px; border-spacing:5px">
+                                @product.Key.Name
+                            </td>
+                            <td style="border:1px solid black; padding: 4px; border-spacing:5px">
+                                <input asp-for="@product.Value" class="form-control" />
+                            </td>
+                            @*<td style="border:1px solid black; padding: 4px; border-spacing:5px">
+                                    <input asp-for="@Model.ProductQuantityDictionary[product.Key].Value" class="form-control" />
+                                </td>
+                        </tr>
+                    }*@
+
+                @for (int i = 0; i < Model.ProductNames.Count(); i++)
+                {
+                    <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                        <td style="border:1px solid black; padding: 4px; border-spacing:5px">
+                            @Model.ProductNames[i]
+                        </td>
+                        <td style="border:1px solid black; padding: 4px; border-spacing:5px">
+                            <input asp-for="@Model.Quantities[i]" class="form-control" />@*i may have to add hidden values here for all of the product info itself? becuase i'm passing the product in does that mean that the products actual values are lost? shoud I only be passing in a product id and name and then on the other side use the product id to just get all the info back from the context?*@
+                        </td>
+
+                    </tr>
+
+                    <div class="form-group">
+                        <input type="hidden" asp-for="ProductIds[i]" />
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="ProductNames[i]" />
+                    </div>
+                }
+            </table>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" asp-controller="ProductKits" asp-action="Create" class="btn btn-default" />
+            </div>
+
+            @*<div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>*@
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

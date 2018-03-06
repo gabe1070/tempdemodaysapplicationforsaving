@@ -1,0 +1,103 @@
+﻿@model DemoDaysApplication.ViewModels.Style_ViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+<h4>Style</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label><span><i> *don't put dashes ('-') in the name</i></span>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTypeId" class="control-label">Product Type</label>
+                <div>
+                    <select asp-for="ProductTypeId" asp-items="@Model.ProductTypeList" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                    </label>
+                </div>
+            </div>
+
+            <h5><b>Colors For This Product Style</b></h5>
+            @for (int i = 0; i < Model.Colors.Count; i++)
+            {
+                @Html.CheckBoxFor(x => Model.Colors[i].IsSelectedByStyle)
+                <i>   </i>
+                @Model.Colors[i].Name
+                <br />
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Colors[i].Id" />@*is this colors id being passed on the right way?*@
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Colors[i].Name" />
+                </div>
+            }
+            <br />
+
+            <h5><b>Genders For This Product Style</b></h5>
+            @for (int i = 0; i < Model.Genders.Count; i++)
+            {
+                @Html.CheckBoxFor(x => Model.Genders[i].IsSelectedByStyle)
+                <i>   </i>
+                @Model.Genders[i].Name
+                <br />
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Genders[i].Id" />@*is this colors id being passed on the right way?*@
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Genders[i].Name" />
+                </div>
+            }
+            <br />
+
+            <h5><b>Sizes For This Product Style</b></h5>
+            @for (int i = 0; i < Model.Sizes.Count; i++)
+            {
+                @Html.CheckBoxFor(x => Model.Sizes[i].IsSelectedByStyle)
+                <i>   </i>
+                @Model.Sizes[i].Name
+                <br />
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Sizes[i].Id" />@*is this colors id being passed on the right way?*@
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Sizes[i].Name" />
+                </div>
+            }
+            <br />
+
+            @*i have to hide model.products cuz it is generated in the controller on the post end*@
+            <div class="form-group">
+                <input type="hidden" asp-for="@Model.Products" />@*is this colors id being passed on the right way?*@
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

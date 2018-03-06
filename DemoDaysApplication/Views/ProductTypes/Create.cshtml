@@ -1,0 +1,53 @@
+﻿@model DemoDaysApplication.ViewModels.Type_Category_ViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create</h2>
+
+<h4>ProductType</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                    </label>
+                </div>
+            </div>
+            <h5><b>Categories To Add This Type To:</b></h5>
+            @for (int i = 0; i < Model.Categories.Count; i++)
+            {
+                @Html.CheckBoxFor(x => Model.Categories[i].IsSelectedByType)
+                <i>   </i>
+                @Model.Categories[i].Name
+                <br />
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Categories[i].Id" />@*what is the alternative to hiding this? maybe it isn't supposed to be in teh view model?*@
+                </div>
+            }
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,110 @@
+﻿@model DemoDaysApplication.ViewModels.Style_ViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<p>
+    <b style="color:red">Warning!</b>
+    If you edit a style, the existing products associated with this style will be cleared and replaced with your new selections. This also means that existing product kits, each of
+    which is modeled after a style, will have their quantities cleared and their instances set back to 0. This will mean loss of checked-in and out data on existing events with
+    product kits made after this style. Only edit a style if there are no events associated with it, or where it is acceptable for product kits of this style to be reset, perhaps
+    either because the event has not happened yet, or is far in the past. I do not recommend editing a style with a corresponding product kit on an event that is ongoing.
+</p>
+
+<h4>Style</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label> <span><i> *don't put dashes ('-') in the name</i></span>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTypeId" class="control-label">Product Type</label>
+                <div>
+                    <select asp-for="ProductTypeId" asp-items="@Model.ProductTypeList" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                    </label>
+                </div>
+            </div>
+
+            <h5><b>Colors For This Product Style</b></h5>
+            @for (int i = 0; i < Model.Colors.Count; i++)
+            {
+                @Html.CheckBoxFor(x => Model.Colors[i].IsSelectedByStyle)
+                <i>   </i>
+                @Model.Colors[i].Name
+                <br />
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Colors[i].Id" />@*is this colors id being passed on the right way?*@
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Colors[i].Name" />
+                </div>
+            }
+            <br />
+
+            <h5><b>Genders For This Product Style</b></h5>
+            @for (int i = 0; i < Model.Genders.Count; i++)
+            {
+                @Html.CheckBoxFor(x => Model.Genders[i].IsSelectedByStyle)
+                <i>   </i>
+                @Model.Genders[i].Name
+                <br />
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Genders[i].Id" />@*is this colors id being passed on the right way?*@
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Genders[i].Name" />
+                </div>
+            }
+            <br />
+
+            <h5><b>Sizes For This Product Style</b></h5>
+            @for (int i = 0; i < Model.Sizes.Count; i++)
+            {
+                @Html.CheckBoxFor(x => Model.Sizes[i].IsSelectedByStyle)
+                <i>   </i>
+                @Model.Sizes[i].Name
+                <br />
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Sizes[i].Id" />@*is this colors id being passed on the right way?*@
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Sizes[i].Name" />
+                </div>
+            }
+            <br />
+
+            @*i have to hide model.products cuz it is generated in the controller on the post end*@
+            <div class="form-group">
+                <input type="hidden" asp-for="@Model.Products" />@*is this colors id being passed on the right way?*@
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

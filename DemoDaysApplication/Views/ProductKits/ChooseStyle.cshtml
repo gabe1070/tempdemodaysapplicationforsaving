@@ -1,0 +1,46 @@
+﻿@model DemoDaysApplication.ViewModels.ChooseStyleForNewProductKit_ViewModel
+
+@{
+    ViewData["Title"] = "ChooseStyle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h4>ProductKit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ChooseStyle">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="StyleId" class="control-label">Product Style</label>
+                <div>
+                    <select asp-for="StyleId" asp-items="@Model.StyleList" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EventId" class="control-label">Event List</label>
+                <div>
+                    <select asp-for="EventId" asp-items="@Model.EventList" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="TerritoryId" class="control-label">Territory List</label>
+                <div>
+                    <select asp-for="TerritoryId" asp-items="@Model.TerritoryList" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Select Style" asp-controller="ProductKits" asp-action="CreateGet" asp-route-eventId="@Model.EventId" asp-route-styleId="@Model.StyleId" class="btn btn-default" />
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
