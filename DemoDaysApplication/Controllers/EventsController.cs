@@ -102,7 +102,7 @@ namespace DemoDaysApplication.Controllers
 
                 var kits = _context.ProductKit.Where(k => k.EventId == @event.Id && k.StyleId == styleId).ToList();
                 var productInstances = new List<ProductInstance>();//so this will be all the instances from all the product kits taht are at this event and of this style
-                
+
                 foreach (var kit in kits)
                 {
                     var thisKitsInstances = _context.ProductInstance.Where(pi => pi.ProductKitId == kit.Id).ToList();//so these will automatically be the right style, and lots of diff products
@@ -209,6 +209,66 @@ namespace DemoDaysApplication.Controllers
             return View(EventDetails_ViewModel);
         }
 
+        public async Task<IActionResult> Ship(int? eventId, int? shippedId)
+        {
+            if (eventId == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Event
+                .SingleOrDefaultAsync(m => m.Id == eventId);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)//I'm not actually loading a new page so why would there be a modelstate? what is this doing? whatever i guess
+            {
+                //maybe it is better to do all of this on the products index page? and do sometthing like for each product instnace, if the event it is on is shipped
+                //and not archived and its product kit territory is like black diamond inventory then subtract those numbers?, and then the claculautions are done on prdoucts and booth adn swag indexes?
+                //would be more flexible and easier to ship and unship.
+                //what to do here:
+                //add up all the instances of each product sent to this event and make that the total checked out to events for that product (instead of on productscontrolller index)
+                //var kitsAtThisEvent = _context.ProductKit.Where(pk => pk.EventId == eventId).ToList();
+                //var kitIdsAtThisEvent = new List<int>();
+                //foreach (var kit in kitsAtThisEvent)
+                //{
+                //    kitIdsAtThisEvent.Add(kit.Id);
+                //}
+                //var instances = _context.ProductInstance.Where(i => kitIdsAtThisEvent.Contains(i.Id)).ToList();
+
+                //var products = _context.Product.ToList();
+                //foreach (var product in products)
+                //{
+                //    var instancesOfThisProductAtThisEvent = instances.Where(n => n.ProductId == product.Id).ToList();//instances already being filtered to be those at this event
+                //    product.CheckedOutQuantity += instancesOfThisProductAtThisEvent.Count();//and on finish event button these will get subtracted
+                //    product.AvailableQuantity = product.TotalQuantity - product.CheckedOutQuantity;
+                //    //because these are adding to the existing quantity rather than setting equal you need to be able to ship an event only once, there is not an
+                //    //easy way to un-ship
+                //    //will want booleans for IsShipped and IsArchived on event
+                //}
+
+                //double check these below are correct
+                if (shippedId == 1)
+                {
+                    @event.IsShipped = true;
+                    TempData["notice"] = "Successfully Shipped";
+                }
+                else if (shippedId == 0)
+                {
+                    @event.IsShipped = false;
+                    TempData["notice"] = "Un-Shipped";
+                }
+                _context.Update(@event);
+                _context.SaveChanges();
+
+                return RedirectToAction("Details", "Events", new { id = eventId });
+            }
+
+            TempData["notice"] = "Error On Ship or Un-Ship Attempt";
+            return RedirectToAction("Details", "Events", new { id = eventId });//this should be some kind of error
+        }
 
 
         // GET: Events/Create

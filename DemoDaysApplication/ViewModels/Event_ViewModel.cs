@@ -62,6 +62,8 @@ namespace DemoDaysApplication.ViewModels
         public List<SwagItem> AllSwagItems { get; set; }
 
         public bool IsActive { get; set; }
+        public bool IsShipped { get; set; }
+
 
     }
 }

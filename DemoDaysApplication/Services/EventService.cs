@@ -61,6 +61,7 @@ namespace DemoDaysApplication.Services
             model.StateId = evnt.StateId;
             model.TerritoryId = evnt.TerritoryId;
             model.IsActive = evnt.IsActive;
+            model.IsShipped = evnt.IsShipped;
 
             //add event rep state and terr names here
             model.RepName = _context.FakeUsers.FirstOrDefault(u => u.Id == model.RepId).Name;//null ref but needs to be replaced with actual users database later anyway
@@ -108,6 +109,7 @@ namespace DemoDaysApplication.Services
             evnt.StateId = model.StateId;
             evnt.TerritoryId = model.TerritoryId;
             evnt.IsActive = true;//newly created events are always active
+            evnt.IsShipped = false;
 
             if (string.IsNullOrWhiteSpace(evnt.DeckUrl))
             {

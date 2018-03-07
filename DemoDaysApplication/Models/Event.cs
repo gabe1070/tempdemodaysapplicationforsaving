@@ -45,5 +45,7 @@ namespace DemoDaysApplication.Models
         public string GymName { get; set; }//momentum, or slca fundraiser in parking lot then bdparking lot or whatever, just a string 
 
         public bool IsActive { get; set; }
+        public bool IsShipped { get; set; }
+
     }
 }

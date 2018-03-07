@@ -23,27 +23,63 @@ namespace DemoDaysApplication.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var products = _context.Product.ToList();
-            foreach (var product in products)
+            var shippedEvents = _context.Event.Where(e => e.IsShipped == true && e.IsActive == true).ToList();
+            var shippedEventIds = new List<int>();
+            foreach (var evnt in shippedEvents)
             {
-                //gonna have to go through all product instances with this product id and add
-                //them up to find how many are assigned to an event
-                //once again this might not be enough, he might want to first find all events 
-                //where datetime.today is between their start and end dates, then get all 
-                //those event's product kits, then find all the product isntnaces on those events
-                //for each product and all the instances assigned to one of those kits for a given
-                //product summed is the quantitycheckedout for that product
-                //especially because below will start to add up all the instances
-                //from way past events, at least those that haven't gotten cleared out by style changes
-                //so this isn't that useful right now
-                var instances = _context.ProductInstance.Where(pi => pi.ProductId == product.Id);
-                var totalInstancesAtEvents = instances.Count();
-                product.CheckedOutQuantity = totalInstancesAtEvents;
-                product.AvailableQuantity = product.TotalQuantity - product.CheckedOutQuantity;
+                shippedEventIds.Add(evnt.Id);
+            }
+            //not just all shipped kits, but ones that we own
+            var blackDiamondTerritory = _context.Territory.FirstOrDefault(t => t.Name == "Black Diamond Inventory");
+            var BDkitsAtShippedEvents = new List<ProductKit>();
+            if (blackDiamondTerritory != null)
+            {
+                BDkitsAtShippedEvents = _context.ProductKit.Where(k => shippedEventIds.Contains(k.EventId) && k.TerritoryId == blackDiamondTerritory.Id).ToList();
+            }
+            else
+            {
+                throw new ArgumentException("you need to make a territory id called Black Diamond Inventory");
+            }
+            var BDkitsAtShippedEventsIds = new List<int>();
+            foreach (var kit in BDkitsAtShippedEvents)
+            {
+                BDkitsAtShippedEventsIds.Add(kit.Id);
             }
 
-            return View(await _context.Product.ToListAsync());
-        }    
+            //below needs to be only the products that have instnaces in kits owned by BD
+            var listOfStyleIdsInShippedKitsOwnedByBd = new List<int>();
+            foreach (var kit in BDkitsAtShippedEvents)
+            {
+                listOfStyleIdsInShippedKitsOwnedByBd.Add(kit.StyleId);
+            }
+
+            var products = _context.Product.Where(p => listOfStyleIdsInShippedKitsOwnedByBd.Contains(p.StyleId)).ToList();
+
+            foreach (var product in products)
+            {
+                var instancesOfThisProduct = _context.ProductInstance.Where(pi => pi.ProductId == product.Id);
+                int totalBDOwnedInstancesAtEvents = 0;
+                foreach (var instance in instancesOfThisProduct)
+                {
+                    if (BDkitsAtShippedEventsIds.Contains(instance.ProductKitId))
+                    {
+                        totalBDOwnedInstancesAtEvents++;
+                    }
+                }
+
+                product.CheckedOutQuantity = totalBDOwnedInstancesAtEvents;
+                product.AvailableQuantity = product.TotalQuantity - product.CheckedOutQuantity;
+            }
+            //products displayed still needs to include ones where the event is not shipped
+            var kitsOwnedByBd = _context.ProductKit.Where(k => k.TerritoryId == blackDiamondTerritory.Id).ToList();
+            var styleIdsToDisplay = new List<int>();
+            foreach (var kit in kitsOwnedByBd)
+            {
+                styleIdsToDisplay.Add(kit.StyleId);
+            }
+            var productsToDisplay = _context.Product.Where(p => styleIdsToDisplay.Contains(p.StyleId)).ToList();
+            return View(productsToDisplay);
+        }
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)

@@ -5,6 +5,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["notice"] != null)
+{
+    @if ((string)TempData["notice"] == "Successfully Shipped")
+    {
+        <h4 id="para" style="color:darkgreen;background-color:lightgreen">@TempData["notice"]</h4>
+    }
+    @if ((string)TempData["notice"] == "Un-Shipped")
+    {
+        <h4 id="para" style="color:darkblue;background-color:lightblue">@TempData["notice"]</h4>
+    }
+    @if ((string)TempData["notice"] == "Error On Ship or Un-Ship Attempt")
+    {
+        <h4 id="para" style="color:darkred;background-color:lightcoral">@TempData["notice"]</h4>
+    }
+}
+
 <h2>@Model.Event_ViewModel.Name</h2>
 
 <div class="col-lg-6">
@@ -137,7 +153,7 @@
                 Files
             </dt>
             <dd>
-                
+
             </dd>
 
             <dt>
@@ -160,7 +176,7 @@
         <a asp-action="Edit" asp-route-id="@Model.Event_ViewModel.Id">Edit Event</a> |
         <a asp-action="Index">Back to List</a> |
         @*<a asp-controller="ProductKits" asp-action="ChooseStyle" asp-route-eventId="@Model.Event_ViewModel.Id">Add Product Kit</a> |*@
-        <a asp-controller="Customers" asp-action="Create" asp-route-eventId="@Model.Event_ViewModel.Id">Add Customer</a> | 
+        <a asp-controller="Customers" asp-action="Create" asp-route-eventId="@Model.Event_ViewModel.Id">Add Customer</a> |
         <a asp-controller="Customers" asp-action="Index" asp-route-eventId="@Model.Event_ViewModel.Id">Customers Index</a>
 
     </div>
@@ -201,13 +217,27 @@
             </div>
         }
     </dl>
+    @if (Model.Event_ViewModel.IsShipped == false)
+    {
+        <div class="form-group">
+            <a asp-controller="Events" asp-action="Ship" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="1" class="btn btn-default">Ship</a>
+            @*<input type="submit" value="Ship" asp-controller="Events" asp-action="Ship" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="0" class="btn btn-default" />*@
+        </div>
+    }
+    @if (Model.Event_ViewModel.IsShipped == true)
+    {
+        <div class="form-group">
+            <a asp-controller="Events" asp-action="Ship" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="0" class="btn btn-default">Un-Ship</a>
+            @*<input type="submit" value="Un-Ship" asp-controller="Events" asp-action="Ship" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="1" class="btn btn-default" />*@
+        </div>
+    }
 </div>
 
 
 <div style="float:left" class="col-slg-12">
-    
+
     <h4 style="float:left" class="col-slg-12">Product Kits</h4>
-    <br /><hr class="col-slg-12"/>
+    <br /><hr class="col-slg-12" />
     @foreach (var kit in Model.ProductKit_ViewModels)
     {
         <div style="float:left; padding-bottom:20px; margin:20px" class="col-lg-3">
@@ -234,8 +264,8 @@
             </table>
             <td>
                 @*<a asp-action="Edit" asp-controller="ProductKits" asp-route-id="@kit.Id">Edit Product Kit</a> |not a single product kit so can't use these anymore
-                <a asp-action="Details" asp-controller="ProductKits" asp-route-id="@kit.Id">Details</a> |
-                <a asp-action="Delete" asp-controller="ProductKits" asp-route-id="@kit.Id">Delete</a> |*@
+                    <a asp-action="Details" asp-controller="ProductKits" asp-route-id="@kit.Id">Details</a> |
+                    <a asp-action="Delete" asp-controller="ProductKits" asp-route-id="@kit.Id">Delete</a> |*@
                 @*<a asp-controller="ProductKits" asp-action="CheckOut" asp-route-productKitId="@kit.Id">CheckOut</a>*@@*make sure that this event id is getting passed in correctly*@
             </td>
         </div>
@@ -243,3 +273,13 @@
 </div>
 
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $(function () {
+            $('#para').delay(6000).hide(1000);
+        });
+    </script>
+
+}
