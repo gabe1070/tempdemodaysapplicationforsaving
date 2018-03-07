@@ -116,6 +116,13 @@ namespace DemoDaysApplication.Controllers
                 }
             }
 
+            var gender = _context.Gender.FirstOrDefault(g => g.Id == customer.GenderId);
+            var genderName = "";
+            if(gender != null)
+            {
+                genderName = gender.Name;
+            }
+
             customerDetails_ViewModel.Customer_ViewModel = new Customer_ViewModel
             {
                 Id = customer.Id,
@@ -125,7 +132,9 @@ namespace DemoDaysApplication.Controllers
                 Email = customer.Email,
                 PhoneNumber = customer.PhoneNumber,
                 Notes = customer.Notes,
-                HasItemsCheckedOut = hasACheckedOutProduct
+                HasItemsCheckedOut = hasACheckedOutProduct,
+                Age = customer.Age,
+                GenderName = genderName
             };
 
             //for feeding into the checkin button we will need 
@@ -148,6 +157,9 @@ namespace DemoDaysApplication.Controllers
                 model.EventName = evnt.Name;
             }
 
+            var genders = _context.Gender.OrderBy(c => c.Name).Where(t => t.IsActive == true && t.Name != "Unisex").Select(x => new { Id = x.Id, Value = x.Name });
+            model.GenderList = new SelectList(genders, "Id", "Value");
+
             return View(model);
         }
 
@@ -166,12 +178,18 @@ namespace DemoDaysApplication.Controllers
             customer.Notes = model.Notes;
             customer.PhoneNumber = model.PhoneNumber;
             customer.EventId = model.EventId;
+            customer.Age = model.Age;
+            customer.GenderId = model.GenderId;
+
+            TempData["notice"] = "Successfully registered";
 
             if (ModelState.IsValid)
             {
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Events", new { id = customer.EventId });
+                return RedirectToAction("Create", "Customers", new { eventId = customer.EventId });
+                //return RedirectToAction("Index", "Customers", new { eventId = customer.EventId });
+                //return RedirectToAction("Details", "Events", new { id = customer.EventId });
                 //return RedirectToAction(nameof(Index));
             }
             return View(customer);
@@ -199,6 +217,13 @@ namespace DemoDaysApplication.Controllers
             model.PhoneNumber = customer.PhoneNumber;
             model.EventId = customer.EventId;
             model.HasItemsCheckedOut = false;
+            model.Age = customer.Age;
+
+            model.GenderId = customer.GenderId;
+            var genders = _context.Gender.OrderBy(c => c.Name).Where(t => t.IsActive == true && t.Name != "Unisex").Select(x => new { Id = x.Id, Value = x.Name });
+            model.GenderList = new SelectList(genders, "Id", "Value");
+
+
             var evnt = _context.Event.FirstOrDefault(e => e.Id == customer.EventId);
             if (evnt != null)
             {
@@ -229,6 +254,8 @@ namespace DemoDaysApplication.Controllers
             customer.Notes = model.Notes;
             customer.PhoneNumber = model.PhoneNumber;
             customer.EventId = model.EventId;
+            customer.Age = model.Age;
+            customer.GenderId = model.GenderId;
 
             if (ModelState.IsValid)
             {
@@ -248,7 +275,7 @@ namespace DemoDaysApplication.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Details", "Events", new { id = customer.EventId });
+                return RedirectToAction("Index", "Customers", new { eventId = customer.EventId });
             }
             return View(model);
         }

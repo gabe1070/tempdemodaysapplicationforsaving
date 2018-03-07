@@ -42,6 +42,10 @@ namespace DemoDaysApplication.Data
         public DbSet<FakeUsers> FakeUsers { get; set; }
         public DbSet<ProductKitIdentifier> ProductKitIdentifier { get; set; }
         public DbSet<ProductInstanceIdentifier> ProductInstanceIdentifier { get; set; }
+        public DbSet<PermanentCustomer_ProductAssociationTable> PermanentCustomer_ProductAssociationTable { get; set; }
+
+
+        
 
 
     }

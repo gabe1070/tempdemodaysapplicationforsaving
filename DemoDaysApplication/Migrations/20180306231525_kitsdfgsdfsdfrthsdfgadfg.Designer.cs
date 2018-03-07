@@ -11,9 +11,10 @@ using System;
 namespace DemoDaysApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180306231525_kitsdfgsdfsdfrthsdfgadfg")]
+    partial class kitsdfgsdfsdfrthsdfgadfg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,15 +92,11 @@ namespace DemoDaysApplication.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Age");
-
                     b.Property<string>("Email");
 
                     b.Property<int>("EventId");
 
                     b.Property<string>("FirstName");
-
-                    b.Property<int>("GenderId");
 
                     b.Property<string>("LastName");
 

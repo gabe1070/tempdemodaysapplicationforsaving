@@ -15,6 +15,9 @@ namespace DemoDaysApplication.Models
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Notes { get; set; }
+        public int Age { get; set; }
+        public int GenderId { get; set; }//this should probably be a dropdown for gender?
+        // 
 
     }
 }

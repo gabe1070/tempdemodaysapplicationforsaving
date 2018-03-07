@@ -548,6 +548,9 @@ namespace DemoDaysApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckOut(CheckOut_ViewModel model)
         {
+            var permanentEntries = new List<PermanentCustomer_ProductAssociationTable>();
+
+
             //!!!the only thing successgully getting passed in and that I am finding is the instance in question, none of the customer info makes it to here
             //but really all I need is the customer id corresponding to each instance
             int eventId = 0;
@@ -590,7 +593,12 @@ namespace DemoDaysApplication.Controllers
 
                 await _context.SaveChangesAsync();
 
+                _productKitService.UploadPermanentInfo(model, ref permanentEntries, i);
+
             }
+
+            _context.PermanentCustomer_ProductAssociationTable.AddRange(permanentEntries);
+            _context.SaveChanges();
 
             eventId = model.EventId;
 

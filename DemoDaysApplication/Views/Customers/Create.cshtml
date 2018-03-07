@@ -7,6 +7,11 @@
 
 <h2>Create</h2>
 
+@if (TempData["notice"] != null)
+{
+    <h4 id="para" style="color:darkgreen;background-color:lightgreen">@TempData["notice"]</h4>
+}
+
 <h4>Customer For Event @Model.EventName</h4>
 <hr />
 <div class="row">
@@ -34,15 +39,28 @@
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="GenderId" class="control-label">Gender</label>
+                <div>
+                    <select asp-for="GenderId" asp-items="@Model.GenderList" class="form-control"></select>
+                </div>
+            </div>
+            @*<div class="form-group">
+                    <label asp-for="Notes" class="control-label"></label>
+                    <input asp-for="Notes" class="form-control" />
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>*@
 
             <div class="form-group">
                 <input type="hidden" asp-for="EventId" />
                 <input type="hidden" asp-for="EventName" />
                 <input type="hidden" asp-for="HasItemsCheckedOut" />
+                <input type="hidden" asp-for="Notes" />
+
             </div>
 
             <div class="form-group">
@@ -61,4 +79,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $(function () {
+            $('#para').delay(2000).hide(500);
+        });
+    </script>
+
 }

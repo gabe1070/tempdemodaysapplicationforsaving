@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,11 @@ namespace DemoDaysApplication.ViewModels
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Notes { get; set; }
+        public int Age { get; set; }
+
+        public int GenderId { get; set; }
+        public SelectList GenderList { get; set; }
+        public string GenderName { get; set; }
 
         //added later:
         public bool HasItemsCheckedOut { get; set; }

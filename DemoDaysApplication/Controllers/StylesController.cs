@@ -157,11 +157,7 @@ namespace DemoDaysApplication.Controllers
 
                 //below and probably this whole section can be factored out and re-used a lot
                 var instanceIdentifiers = _context.ProductInstanceIdentifier.Where(i => productInstanceIds.Contains((int)i.InstanceId)).ToList();//AAAAAAAAAAAAAAAAAAAAAAAA
-                //foreach (var instanceIdentifer in instanceIdentifiers)//AAAAAAAAAAA whole loop
-                //{
-                //    instanceIdentifer.IsInUse = false;
-                //    instanceIdentifer.InstanceId = null;
-                //}on deleting or editing a style instance identifiers can actually be removed, not just reset, becuase their corresponding products are actually gone permanentlyt
+                
 
                 _context.ProductInstanceIdentifier.RemoveRange(instanceIdentifiers);
                 _context.ProductInstance.RemoveRange(productInstances);
@@ -287,11 +283,7 @@ namespace DemoDaysApplication.Controllers
                 var customer_Instances = _context.ProductInstance_Customer.Where(pic => productInstanceIds.Contains(pic.ProductInstanceId)).ToList();
 
                 var instanceIdentifiers = _context.ProductInstanceIdentifier.Where(i => productInstanceIds.Contains((int)i.InstanceId)).ToList();//AAAAAAAAAAAAAAAAAAAAAAAA
-                //foreach (var instanceIdentifer in instanceIdentifiers)//AAAAAAAAAAA whole loop
-                //{
-                //    instanceIdentifer.IsInUse = false;
-                //    instanceIdentifer.InstanceId = null;
-                //}
+                
                 _context.ProductInstanceIdentifier.RemoveRange(instanceIdentifiers);
                 _context.ProductInstance.RemoveRange(productInstances);
                 _context.ProductInstance_Customer.RemoveRange(customer_Instances);//its ok if this is null for awhile right? or will 

@@ -158,5 +158,42 @@ namespace DemoDaysApplication.Services
             return idToUse.Identifier.ToString();
 
         }
+
+        public void UploadPermanentInfo(CheckOut_ViewModel model, ref List<PermanentCustomer_ProductAssociationTable> permanentEntries, int i)
+        {
+            var customer = _context.Customer.FirstOrDefault(c => c.Id == model.CustomerIds[i]);
+            var product = _context.Product.FirstOrDefault(p => p.Id == model.productInstances[i].ProductId);
+            var evnt = _context.Event.FirstOrDefault(e => e.Id == model.EventId);
+
+            var color = _context.Color.FirstOrDefault(c => c.Id == product.ColorId);
+            var gender = _context.Gender.FirstOrDefault(g => g.Id == product.GenderId);
+            var size = _context.Size.FirstOrDefault(s => s.Id == product.SizeId);
+            var customerGender = _context.Gender.FirstOrDefault(g => g.Id == customer.GenderId);
+
+            if (customer != null && product != null && evnt != null && color != null && size != null && gender != null && customerGender != null)
+            {
+                permanentEntries.Add(new PermanentCustomer_ProductAssociationTable
+                {
+                    OriginalCustomerId = model.CustomerIds[i],
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    Email = customer.Email,
+                    PhoneNumber = customer.PhoneNumber,
+                    Notes = customer.Notes,
+                    CustomerGender = customerGender.Name,
+                    Age = customer.Age, 
+                    EventName = evnt.Name,
+                    OriginalProductId = product.Id,
+                    ProductName = product.Name,
+                    Color = color.Name,
+                    Size = size.Name,
+                    ProductGender = gender.Name,
+                    AtRetailer = evnt.IsRetailer
+                });
+
+            }
+
+
+        }
     }
 }
