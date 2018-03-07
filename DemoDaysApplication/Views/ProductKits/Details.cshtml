@@ -1,4 +1,4 @@
-﻿@model DemoDaysApplication.Models.ProductKit
+﻿@model DemoDaysApplication.ViewModels.ProductKit_ViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -8,24 +8,32 @@
 <h2>Details</h2>
 
 <div>
-    <h4>ProductKit</h4>
+    <h4>ProductKit: @Model.Name</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.EventId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EventId)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.StyleId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.StyleId)
-        </dd>
-    </dl>
 </div>
-<div>
+
+<h3>Products</h3>
+<table style="border:1px solid black; padding: 4px; border-spacing:5px; margin: 15px" class="col-lg-4">
+    <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+        <td style="border:1px solid black; padding: 4px; border-spacing:5px;" colspan="3"><div style="min-width:250px">@Model.Name</div></td>
+    </tr>
+
+    <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+        <th style="border:1px solid black; padding: 4px; border-spacing:5px">Product</th>
+        <th style="border:1px solid black; padding: 4px; border-spacing:5px">Total Qty.</th>
+    </tr>
+
+    @for (int i = 0; i < Model.Quantities.Length; i++)
+    {
+        <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+            <td style="border:1px solid black; padding: 4px; border-spacing:5px">@Model.ProductNames[i]</td>
+            <td style="border:1px solid black; padding: 4px; border-spacing:5px">@Model.Quantities[i]</td>
+        </tr>
+    }
+</table>
+<br style="clear:both"/>
+<hr />
+<div style="clear:both">
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

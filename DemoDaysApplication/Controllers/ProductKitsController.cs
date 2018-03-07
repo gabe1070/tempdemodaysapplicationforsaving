@@ -89,7 +89,27 @@ namespace DemoDaysApplication.Controllers
                 return NotFound();
             }
 
-            return View(productKit);
+            //
+            var model = new ProductKit_ViewModel();
+            model.Name = productKit.Name;
+            model.ProductNames = new List<string>();
+            var products = _context.Product.Where(p => p.StyleId == productKit.StyleId).ToList();
+            model.Quantities = new int[products.Count()];
+            for (int i = 0; i < products.Count(); i++)
+            {
+                model.ProductNames.Add(products[i].Name);
+
+                var instances = _context.ProductInstance.Where(pi => pi.ProductKitId == productKit.Id).ToList();
+
+                int instanceCount = 0;
+                for (int j = 0; j < instances.Count(); j++)
+                {
+                    instanceCount++;
+                }
+                model.Quantities[i] = instanceCount;
+            }
+            //
+            return View(model);
         }
 
         // GET: ProductKits/Create
