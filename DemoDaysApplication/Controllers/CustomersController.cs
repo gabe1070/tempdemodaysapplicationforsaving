@@ -187,6 +187,9 @@ namespace DemoDaysApplication.Controllers
             {
                 _context.Add(customer);
                 await _context.SaveChangesAsync();
+                //perhaps there will be a conditional here later for roles where it loops back
+                //to create if you are on the simple customer creator role, but otherwise goes 
+                //to the customers index
                 return RedirectToAction("Create", "Customers", new { eventId = customer.EventId });
                 //return RedirectToAction("Index", "Customers", new { eventId = customer.EventId });
                 //return RedirectToAction("Details", "Events", new { id = customer.EventId });

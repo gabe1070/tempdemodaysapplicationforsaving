@@ -49,7 +49,7 @@ namespace DemoDaysApplication.Controllers
         {
             var model = new State_ViewModel();
 
-            var territories = _context.Territory.OrderBy(c => c.Name).Where(t => t.IsActive == true).Select(x => new { Id = x.Id, Value = x.Name });
+            var territories = _context.Territory.OrderBy(c => c.Name).Where(t => t.IsActive == true && t.Name != "Black Diamond Inventory").Select(x => new { Id = x.Id, Value = x.Name });
             model.TerritoryList = new SelectList(territories, "Id", "Value");
 
             return View(model);
@@ -105,7 +105,7 @@ namespace DemoDaysApplication.Controllers
                 model.TerritoryId = stte.TerritoryId;//this may have to get replaced here and put below the below thing
             }
 
-            var territories = _context.Territory.OrderBy(c => c.Name).Where(t => t.IsActive == true).Select(x => new { Id = x.Id, Value = x.Name });
+            var territories = _context.Territory.OrderBy(c => c.Name).Where(t => t.IsActive == true && t.Name != "Black Diamond Inventory").Select(x => new { Id = x.Id, Value = x.Name });
             model.TerritoryList = new SelectList(territories, "Id", "Value");
 
             return View(model);

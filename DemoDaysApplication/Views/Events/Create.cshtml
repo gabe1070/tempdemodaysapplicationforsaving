@@ -115,6 +115,11 @@
                 <span asp-validation-for="DeckUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="TrackingNumber" class="control-label">Tracking Number</label>
+                <input asp-for="TrackingNumber" class="form-control" />
+                <span asp-validation-for="TrackingNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <div class="checkbox">
                     <label>
                         <input asp-for="IsRetailer" /> <b>Event at a Retailer?</b>
@@ -133,56 +138,56 @@
 
             <h5><b>Swag Items:</b></h5>
             @for (int i = 0; i < Model.Event_SwagItems.Count; i++)
-    {
-        @Model.Event_SwagItems[i].SwagItemName
-        <span> Qty: </span>
-        <div class="form-group">
-            <input asp-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="form-control" />
-            <span asp-validation-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="text-danger"></span>
-        </div>
+            {
+                @Model.Event_SwagItems[i].SwagItemName
+                <span> Qty: </span>
+                <div class="form-group">
+                    <input asp-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="form-control" />
+                    <span asp-validation-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="text-danger"></span>
+                </div>
 
-//and then the hidden stuff
+                //and then the hidden stuff
 
-        <div class="form-group">
-            <input type="hidden" asp-for="@Model.Event_SwagItems[i].Id" />
-        </div>
-        <div class="form-group">
-            <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityGivenAway" />
-        </div>
-        <div class="form-group">
-            <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" />
-        </div>
-        <div class="form-group">
-            <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemId" />
-        </div>
-        <div class="form-group">
-            <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemName" />
-        </div>
-}
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].Id" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityGivenAway" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemId" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemName" />
+                </div>
+            }
             <br />
 
             <h5><b>Booth Items:</b></h5>
             @for (int i = 0; i < Model.Event_BoothItems.Count; i++)
-    {
-        @Model.Event_BoothItems[i].BoothItemName
-        <span> Qty: </span>
-        <div class="form-group">
-            <input asp-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="form-control" />
-            <span asp-validation-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="text-danger"></span>
-        </div>
+            {
+                @Model.Event_BoothItems[i].BoothItemName
+                <span> Qty: </span>
+                <div class="form-group">
+                    <input asp-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="form-control" />
+                    <span asp-validation-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="text-danger"></span>
+                </div>
 
-//and then the hidden stuff:
+                //and then the hidden stuff:
 
-        <div class="form-group">
-            <input type="hidden" asp-for="@Model.Event_BoothItems[i].Id" />
-        </div>
-        <div class="form-group">
-            <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemId" />
-        </div>
-        <div class="form-group">
-            <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemName" />
-        </div>
-}
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].Id" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemId" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemName" />
+                </div>
+            }
             <br />
 
 

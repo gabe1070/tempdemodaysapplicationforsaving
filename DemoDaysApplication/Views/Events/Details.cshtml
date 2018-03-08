@@ -19,6 +19,15 @@
     {
         <h4 id="para" style="color:darkred;background-color:lightcoral">@TempData["notice"]</h4>
     }
+
+    @if ((string)TempData["notice"] == "Successfully Finished")
+    {
+        <h4 id="para" style="color:darkorange;background-color:lightgoldenrodyellow">@TempData["notice"]</h4>
+    }
+    @if ((string)TempData["notice"] == "Un-Finished")
+    {
+        <h4 id="para" style="color:saddlebrown;background-color:lightgray">@TempData["notice"]</h4>
+    }
 }
 
 <h2>@Model.Event_ViewModel.Name</h2>
@@ -150,6 +159,13 @@
             </dd>
 
             <dt>
+                @Html.DisplayNameFor(model => model.Event_ViewModel.TrackingNumber)
+            </dt>
+            <dd>
+                <a href="http://www.google.com/search?q= @Model.Event_ViewModel.TrackingNumber.ToString()">@Html.DisplayFor(model => model.Event_ViewModel.TrackingNumber)</a>
+            </dd>
+
+            <dt>
                 Files
             </dt>
             <dd>
@@ -173,8 +189,11 @@
 
 
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.Event_ViewModel.Id">Edit Event</a> |
-        <a asp-action="Index">Back to List</a> |
+        @if (Model.Event_ViewModel.IsActive == true)
+        {
+        <a asp-action="Edit" asp-route-id="@Model.Event_ViewModel.Id">Edit Event</a>
+        }
+        | <a asp-action="Index">Back to List</a> |
         @*<a asp-controller="ProductKits" asp-action="ChooseStyle" asp-route-eventId="@Model.Event_ViewModel.Id">Add Product Kit</a> |*@
         <a asp-controller="Customers" asp-action="Create" asp-route-eventId="@Model.Event_ViewModel.Id">Add Customer</a> |
         <a asp-controller="Customers" asp-action="Index" asp-route-eventId="@Model.Event_ViewModel.Id">Customers Index</a>
@@ -186,23 +205,29 @@
 <div class="col-lg-6">
     <h4>Swag And Booth Items</h4>
     <hr />
-    <h5>Swag Items:</h5>
-    <dl class="dl-horizontal">
+    <h5><u><b>Swag Items:</b></u></h5>
+    <div>
+        <table style="border:1px solid black; padding: 4px; border-spacing:5px; margin: 15px">
 
-        @foreach (var swagItem in Model.Event_SwagItems)
-        {
-            <div>
-                <dt>
-                    @swagItem.SwagItemName
-                </dt>
-                <dd>
-                    @swagItem.QuantityBroughtToEvent
-                </dd>
-            </div>
-        }
-    </dl>
+            <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                <th style="border:1px solid black; padding: 4px; border-spacing:5px">Name</th>
+                <th style="border:1px solid black; padding: 4px; border-spacing:5px">Qty. Brought</th>
+                <th style="border:1px solid black; padding: 4px; border-spacing:5px">Qty. Given Away</th>
+                <th style="border:1px solid black; padding: 4px; border-spacing:5px">Qty. Remaining</th>
+            </tr>
+            @foreach (var swagItem in Model.Event_SwagItems)
+            {
+                <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
+                    <td style="border:1px solid black; padding: 4px; border-spacing:5px;"> @swagItem.SwagItemName</td>
+                    <td style="border:1px solid black; padding: 4px; border-spacing:5px; text-align:center"> @swagItem.QuantityBroughtToEvent</td>
+                    <td style="border:1px solid black; padding: 4px; border-spacing:5px; text-align:center"> @swagItem.QuantityGivenAway</td>
+                    <td style="border:1px solid black; padding: 4px; border-spacing:5px; text-align:center"> @swagItem.QuantityRemainingAfterEvent</td>
+                </tr>
+            }
+        </table>
+    </div>
 
-    <h5>Booth Items:</h5>
+    <h5><u><b>Booth Items:</b></u></h5>
     <dl class="dl-horizontal">
 
         @foreach (var boothItem in Model.Event_BoothItems)
@@ -217,25 +242,36 @@
             </div>
         }
     </dl>
-    @if (Model.Event_ViewModel.IsShipped == false)
+    @if (Model.Event_ViewModel.IsShipped == false && Model.Event_ViewModel.IsActive == true)
     {
         <div class="form-group">
             <a asp-controller="Events" asp-action="Ship" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="1" class="btn btn-default">Ship</a>
-            @*<input type="submit" value="Ship" asp-controller="Events" asp-action="Ship" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="0" class="btn btn-default" />*@
         </div>
     }
-    @if (Model.Event_ViewModel.IsShipped == true)
+    @if (Model.Event_ViewModel.IsShipped == true && Model.Event_ViewModel.IsActive == true)
     {
         <div class="form-group">
             <a asp-controller="Events" asp-action="Ship" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="0" class="btn btn-default">Un-Ship</a>
-            @*<input type="submit" value="Un-Ship" asp-controller="Events" asp-action="Ship" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="1" class="btn btn-default" />*@
+        </div>
+    }
+
+    @if (Model.Event_ViewModel.IsShipped == true && Model.Event_ViewModel.IsActive == true)
+    {
+        <div class="form-group">
+            <a asp-controller="Events" asp-action="Finish" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="0" asp-route-activeId="0" class="btn btn-default">Finish</a>
+        </div>
+    }
+    @if (Model.Event_ViewModel.IsShipped == false && Model.Event_ViewModel.IsActive == false)
+    {
+        <div class="form-group">
+            <a asp-controller="Events" asp-action="Finish" asp-route-eventId="@Model.Event_ViewModel.Id" asp-route-shippedId="1" asp-route-activeId="1" class="btn btn-default">Un-Finish</a>
         </div>
     }
 </div>
 
 
-<div style="float:left" class="col-slg-12">
-
+<div style="float:left; clear:both" class="col-slg-12">
+    <br />
     <h4 style="float:left" class="col-slg-12">Product Kits</h4>
     <br /><hr class="col-slg-12" />
     @foreach (var kit in Model.ProductKit_ViewModels)

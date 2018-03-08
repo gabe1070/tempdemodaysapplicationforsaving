@@ -15,15 +15,16 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
 
-            <hr />
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsActive" /> <b>Event Active?</b>
-                    </label>
+            @*<hr />
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="IsActive" /> <b>Event Active?</b>can't have the ability to archive in edit because then could throw off ship/finish buttons?
+                        </label>
+                    </div>
                 </div>
-            </div>
-            <hr />
+                <hr />*@
+            <input type="hidden" asp-for="IsActive" />
 
 
             <div class="form-group">
@@ -129,6 +130,11 @@
                 <span asp-validation-for="DeckUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="TrackingNumber" class="control-label">Tracking Number</label>
+                <input asp-for="TrackingNumber" class="form-control" />
+                <span asp-validation-for="TrackingNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <div class="checkbox">
                     <label>
                         <input asp-for="IsRetailer" /> <b>Event at a Retailer?</b>
@@ -141,16 +147,34 @@
                 <span asp-validation-for="GymName" class="text-danger"></span>
             </div>
 
-            <h5><b>Swag Items:</b></h5>
+            <h4><b><u>Swag Items:</u></b></h4>
             @for (int i = 0; i < Model.Event_SwagItems.Count; i++)
             {
-                @Model.Event_SwagItems[i].SwagItemName
-                <span> Qty: </span>
-                <div class="form-group">
-                    <input asp-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="form-control" />
-                    <span asp-validation-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="text-danger"></span>
-                </div>
+                <b>@Model.Event_SwagItems[i].SwagItemName</b>
+                @if (Model.IsShipped == false)//that is if it isn't shipped you can still edit the quantity you are bringing with you
+                {
+                    <p> Quantity Brought To Event: </p>
+                    <div class="form-group">
+                        <input asp-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="form-control" />
+                        <span asp-validation-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="text-danger"></span>
+                    </div>
 
+                    <div class="form-group">
+                        <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" />
+                    </div>
+                }
+                @if (Model.IsShipped == true)
+                {
+                    <span> Quantity Remaining After Event: </span>
+                    <div class="form-group">
+                        <input asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" class="form-control" />
+                        <span asp-validation-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" />
+                    </div>
+                }
                 //and then the hidden stuff
 
                 <div class="form-group">
@@ -159,9 +183,9 @@
                 <div class="form-group">
                     <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityGivenAway" />
                 </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" />
-                </div>
+                @*<div class="form-group">
+                        <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" />
+                    </div>*@
                 <div class="form-group">
                     <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemId" />
                 </div>
@@ -171,7 +195,7 @@
             }
             <br />
 
-            <h5><b>Booth Items:</b></h5>
+            <h4><b><u>Booth Items:</u></b></h4>
             @for (int i = 0; i < Model.Event_BoothItems.Count; i++)
             {
                 @Model.Event_BoothItems[i].BoothItemName

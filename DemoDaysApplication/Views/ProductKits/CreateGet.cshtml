@@ -34,20 +34,6 @@
                     <th style="border:1px solid black; padding: 4px; border-spacing:5px">Product SKU</th>
                     <th style="border:1px solid black; padding: 4px; border-spacing:5px">Desired Quantity in Kit</th>
                 </tr>
-                @*@foreach (KeyValuePair<Product, int> product in Model.ProductQuantityDictionary)
-                    {
-                        <tr style="border:1px solid black; padding: 4px; border-spacing:5px">
-                            <td style="border:1px solid black; padding: 4px; border-spacing:5px">
-                                @product.Key.Name
-                            </td>
-                            <td style="border:1px solid black; padding: 4px; border-spacing:5px">
-                                <input asp-for="@product.Value" class="form-control" />
-                            </td>
-                            @*<td style="border:1px solid black; padding: 4px; border-spacing:5px">
-                                    <input asp-for="@Model.ProductQuantityDictionary[product.Key].Value" class="form-control" />
-                                </td>
-                        </tr>
-                    }*@
 
                 @for (int i = 0; i < Model.ProductNames.Count(); i++)
                 {
@@ -74,9 +60,6 @@
                 <input type="submit" value="Create" asp-controller="ProductKits" asp-action="Create" class="btn btn-default" />
             </div>
 
-            @*<div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>*@
         </form>
     </div>
 </div>

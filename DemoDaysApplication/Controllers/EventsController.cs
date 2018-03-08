@@ -223,42 +223,38 @@ namespace DemoDaysApplication.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)//I'm not actually loading a new page so why would there be a modelstate? what is this doing? whatever i guess
+            if (ModelState.IsValid)
             {
-                //maybe it is better to do all of this on the products index page? and do sometthing like for each product instnace, if the event it is on is shipped
-                //and not archived and its product kit territory is like black diamond inventory then subtract those numbers?, and then the claculautions are done on prdoucts and booth adn swag indexes?
-                //would be more flexible and easier to ship and unship.
-                //what to do here:
-                //add up all the instances of each product sent to this event and make that the total checked out to events for that product (instead of on productscontrolller index)
-                //var kitsAtThisEvent = _context.ProductKit.Where(pk => pk.EventId == eventId).ToList();
-                //var kitIdsAtThisEvent = new List<int>();
-                //foreach (var kit in kitsAtThisEvent)
-                //{
-                //    kitIdsAtThisEvent.Add(kit.Id);
-                //}
-                //var instances = _context.ProductInstance.Where(i => kitIdsAtThisEvent.Contains(i.Id)).ToList();
+                var eventSwagItems = _context.Event_SwagItem.Where(s => s.EventId == @event.Id).ToList();
+                var allSwagItems = _context.SwagItem.ToList();
 
-                //var products = _context.Product.ToList();
-                //foreach (var product in products)
-                //{
-                //    var instancesOfThisProductAtThisEvent = instances.Where(n => n.ProductId == product.Id).ToList();//instances already being filtered to be those at this event
-                //    product.CheckedOutQuantity += instancesOfThisProductAtThisEvent.Count();//and on finish event button these will get subtracted
-                //    product.AvailableQuantity = product.TotalQuantity - product.CheckedOutQuantity;
-                //    //because these are adding to the existing quantity rather than setting equal you need to be able to ship an event only once, there is not an
-                //    //easy way to un-ship
-                //    //will want booleans for IsShipped and IsArchived on event
-                //}
-
-                //double check these below are correct
                 if (shippedId == 1)
                 {
                     @event.IsShipped = true;
                     TempData["notice"] = "Successfully Shipped";
+
+                    foreach (var event_SwagItem in eventSwagItems)
+                    {
+                        var swagItem = allSwagItems.FirstOrDefault(s => s.Id == event_SwagItem.SwagItemId);
+                        if(swagItem != null)
+                        {
+                            swagItem.TotalQuantityInInventory -= event_SwagItem.QuantityBroughtToEvent;//quantity given away
+                        }
+                    }
                 }
                 else if (shippedId == 0)
                 {
                     @event.IsShipped = false;
                     TempData["notice"] = "Un-Shipped";
+
+                    foreach (var event_SwagItem in eventSwagItems)
+                    {
+                        var swagItem = allSwagItems.FirstOrDefault(s => s.Id == event_SwagItem.SwagItemId);
+                        if (swagItem != null)
+                        {
+                            swagItem.TotalQuantityInInventory += event_SwagItem.QuantityBroughtToEvent;//quantity given away
+                        }
+                    }
                 }
                 _context.Update(@event);
                 _context.SaveChanges();
@@ -270,6 +266,64 @@ namespace DemoDaysApplication.Controllers
             return RedirectToAction("Details", "Events", new { id = eventId });//this should be some kind of error
         }
 
+        public async Task<IActionResult> Finish(int? eventId, int? shippedId, int? activeId)
+        {
+            if (eventId == null)
+            {
+                return NotFound();
+            }
+
+            var @event = await _context.Event
+                .SingleOrDefaultAsync(m => m.Id == eventId);
+            if (@event == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var eventSwagItems = _context.Event_SwagItem.Where(s => s.EventId == @event.Id).ToList();
+                var allSwagItems = _context.SwagItem.ToList();
+
+                if (shippedId == 0 && activeId == 0)
+                {
+                    @event.IsShipped = false;
+                    @event.IsActive = false;
+                    TempData["notice"] = "Successfully Finished";
+
+                    foreach (var event_SwagItem in eventSwagItems)
+                    {
+                        var swagItem = allSwagItems.FirstOrDefault(s => s.Id == event_SwagItem.SwagItemId);
+                        if (swagItem != null)
+                        {
+                            swagItem.TotalQuantityInInventory += event_SwagItem.QuantityRemainingAfterEvent;
+                        }
+                    }
+                }
+                else if (shippedId == 1 && activeId == 1)
+                {
+                    @event.IsShipped = true;
+                    @event.IsActive = true;
+                    TempData["notice"] = "Un-Finished";
+
+                    foreach (var event_SwagItem in eventSwagItems)
+                    {
+                        var swagItem = allSwagItems.FirstOrDefault(s => s.Id == event_SwagItem.SwagItemId);
+                        if (swagItem != null)
+                        {
+                            swagItem.TotalQuantityInInventory -= event_SwagItem.QuantityRemainingAfterEvent;
+                        }
+                    }
+                }
+                _context.Update(@event);
+                _context.SaveChanges();
+
+                return RedirectToAction("Details", "Events", new { id = eventId });
+            }
+
+            TempData["notice"] = "Error On Ship or Un-Ship Attempt";
+            return RedirectToAction("Details", "Events", new { id = eventId });//this should be some kind of error
+        }
 
         // GET: Events/Create
         public IActionResult Create()
@@ -326,7 +380,7 @@ namespace DemoDaysApplication.Controllers
             {
                 _context.Add(evnt);//dunno if this is sufficient
                 await _context.SaveChangesAsync();
-                _eventService.SaveEventsAndBoothItemsForNewEvent(evnt.Id, ref model);
+                _eventService.SaveEventsAndBoothItemsForNewEvent(evnt.Id, ref model, true, false);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -375,8 +429,10 @@ namespace DemoDaysApplication.Controllers
                     EventId = swagItemsFromThisEvent[i].EventId,//this could probably just be id as well
                     SwagItemId = swagItemsFromThisEvent[i].SwagItemId,//changed this to swagitem id from id, might be wrong on booths
                     QuantityBroughtToEvent = swagItemsFromThisEvent[i].QuantityBroughtToEvent,
-                    QuantityGivenAway = swagItemsFromThisEvent[i].QuantityGivenAway,
-                    QuantityRemainingAfterEvent = swagItemsFromThisEvent[i].QuantityBroughtToEvent - swagItemsFromThisEvent[i].QuantityGivenAway,
+
+                    QuantityRemainingAfterEvent = swagItemsFromThisEvent[i].QuantityRemainingAfterEvent,//swagItemsFromThisEvent[i].QuantityBroughtToEvent - swagItemsFromThisEvent[i].QuantityGivenAway,
+                    QuantityGivenAway = swagItemsFromThisEvent[i].QuantityBroughtToEvent - swagItemsFromThisEvent[i].QuantityRemainingAfterEvent,
+
                     SwagItemName = _context.SwagItem.FirstOrDefault(s => s.Id == swagItemsFromThisEvent[i].SwagItemId).Name//potential null ref
                 });
             }
@@ -387,7 +443,7 @@ namespace DemoDaysApplication.Controllers
                 swagItemIdsForAllCurrentSwagItemsOnThisEvent.Add(event_swagItem.SwagItemId);
 
             }
-            foreach (var swagItem in model.AllSwagItems)
+            foreach (var swagItem in model.AllSwagItems)//this is for adding newly made swag items with all zero values, htis should be fine
             {
                 if (!swagItemIdsForAllCurrentSwagItemsOnThisEvent.Contains(swagItem.Id) && swagItem.IsActive == true)
                 {
@@ -460,21 +516,23 @@ namespace DemoDaysApplication.Controllers
 
             var evnt = _context.Event.FirstOrDefault(m => m.Id == id);
 
-            _eventService.ConvertEventViewModelToEventForEdit(ref model, ref evnt);//not sure if this is working?
+            _eventService.ConvertEventViewModelToEventForEdit(ref model, ref evnt);
 
             var currentBoothEventEntries = _context.Event_BoothItem.Where(eb => eb.EventId == id).ToList();
             _context.Event_BoothItem.RemoveRange(currentBoothEventEntries);
-            var currentSwagEventEntries = _context.Event_SwagItem.Where(eb => eb.EventId == id).ToList();
+            var currentSwagEventEntries = _context.Event_SwagItem.Where(eb => eb.EventId == id).ToList();//Here we are removing the event_swag entries, but I need this data for the update?
             _context.Event_SwagItem.RemoveRange(currentSwagEventEntries);
             await _context.SaveChangesAsync();
 
             if (ModelState.IsValid)
             {
-                _context.Update(evnt);//dunno if this is sufficient
-                await _context.SaveChangesAsync();//the error is thrown here
-                _eventService.SaveEventsAndBoothItemsForNewEvent(evnt.Id, ref model);
+                _context.Update(evnt);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _eventService.SaveEventsAndBoothItemsForNewEvent(evnt.Id, ref model, false, evnt.IsShipped);
+                await _context.SaveChangesAsync();
+
+                //var archivedId = evnt.IsActive ? 0 : 1;
+                return RedirectToAction("Details", "Events", new { id = id });
             }
             return View(model);
 

@@ -13,28 +13,28 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    Start Date
-                </th>
-                <th>
-                    End Date
-                </th>
-                <th>
-                    Requested Ship Date
-                </th>
-                <th>
-                    Rep Name
-                </th>
-                <th>
-                    Territory Name
-                </th>
-                <th>
-                    State Name
-                </th>
-                @*<th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                End Date
+            </th>
+            <th>
+                Requested Ship Date
+            </th>
+            <th>
+                Rep Name
+            </th>
+            <th>
+                Territory Name
+            </th>
+            <th>
+                State Name
+            </th>
+            @*<th>
                     @Html.DisplayNameFor(model => model.LocationAddress)
                 </th>
                 <th>
@@ -76,86 +76,90 @@
                 <th>
                     @Html.DisplayNameFor(model => model.IsRetailer)
                 </th>*@
-                <th>
-                    Gym Name
-                </th>
+            <th>
+                Gym Name
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestedShipDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RepName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TerritoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StateName)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.LocationAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocationZipCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippingAddress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippingZipCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstimatedNumberSpectators)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ActualNumberSpectators)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EstimatedNumberCompetitors)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ActualNumberCompetitors)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Notes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeckUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsRetailer)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.GymName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RequestedShipDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RepName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TerritoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StateName)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.LocationAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LocationZipCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShippingAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShippingZipCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContactNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EstimatedNumberSpectators)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ActualNumberSpectators)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EstimatedNumberCompetitors)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ActualNumberCompetitors)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Notes)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DeckUrl)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsRetailer)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.GymName)
+                </td>
+                <td>
+                    @if (item.IsActive == true)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    | <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

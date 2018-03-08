@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemoDaysApplication.Data;
 using DemoDaysApplication.Models;
+using DemoDaysApplication.ViewModels;
 
 namespace DemoDaysApplication.Controllers
 {
@@ -78,7 +79,16 @@ namespace DemoDaysApplication.Controllers
             {
                 return NotFound();
             }
-            return View(swagItem);
+
+            var model = new SwagItem_ViewModel();
+            model.Name = swagItem.Name;
+            model.Id = swagItem.Id;
+            model.IsActive = swagItem.IsActive;
+            model.Size = swagItem.Size;
+            model.TotalQuantityInInventory = 0;
+            model.Color = swagItem.Color;
+
+            return View(model);
         }
 
         // POST: SwagItems/Edit/5
@@ -86,12 +96,19 @@ namespace DemoDaysApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Color,Size,TotalQuantityInInventory,IsActive")] SwagItem swagItem)
+        public async Task<IActionResult> Edit(int id, SwagItem_ViewModel model)
         {
-            if (id != swagItem.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
+
+            var swagItem = _context.SwagItem.FirstOrDefault(s => s.Id == id);
+            swagItem.Name = model.Name;
+            swagItem.Color = model.Color;
+            swagItem.IsActive = model.IsActive;
+            swagItem.Size = model.Size;
+            swagItem.TotalQuantityInInventory += model.TotalQuantityInInventory;
 
             if (ModelState.IsValid)
             {
@@ -113,7 +130,7 @@ namespace DemoDaysApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(swagItem);
+            return View(model);
         }
 
         private bool SwagItemExists(int id)

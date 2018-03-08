@@ -99,7 +99,7 @@ namespace DemoDaysApplication.Controllers
             {
                 model.ProductNames.Add(products[i].Name);
 
-                var instances = _context.ProductInstance.Where(pi => pi.ProductKitId == productKit.Id).ToList();
+                var instances = _context.ProductInstance.Where(pi => pi.ProductKitId == productKit.Id && pi.ProductId == products[i].Id).ToList();//AND of this product
 
                 int instanceCount = 0;
                 for (int j = 0; j < instances.Count(); j++)

@@ -22,7 +22,7 @@ namespace DemoDaysApplication.Services
 
         public void PopulateDropDowns(ref Event_ViewModel model)
         {
-            var territories = _context.Territory.OrderBy(c => c.Name).Where(p => p.IsActive == true).Select(x => new { Id = x.Id, Value = x.Name });
+            var territories = _context.Territory.OrderBy(c => c.Name).Where(p => p.IsActive == true && p.Name != "Black Diamond Inventory").Select(x => new { Id = x.Id, Value = x.Name });
             model.TerritoryList = new SelectList(territories, "Id", "Value");
 
             var states = _context.State.OrderBy(c => c.Name).Where(p => p.IsActive == true).Select(x => new { Id = x.Id, Value = x.Name });
@@ -62,6 +62,7 @@ namespace DemoDaysApplication.Services
             model.TerritoryId = evnt.TerritoryId;
             model.IsActive = evnt.IsActive;
             model.IsShipped = evnt.IsShipped;
+            model.TrackingNumber = evnt.TrackingNumber;
 
             //add event rep state and terr names here
             model.RepName = _context.FakeUsers.FirstOrDefault(u => u.Id == model.RepId).Name;//null ref but needs to be replaced with actual users database later anyway
@@ -110,10 +111,15 @@ namespace DemoDaysApplication.Services
             evnt.TerritoryId = model.TerritoryId;
             evnt.IsActive = true;//newly created events are always active
             evnt.IsShipped = false;
+            evnt.TrackingNumber = model.TrackingNumber;
 
             if (string.IsNullOrWhiteSpace(evnt.DeckUrl))
             {
                 evnt.DeckUrl = "no link";
+            }
+            if (string.IsNullOrWhiteSpace(evnt.TrackingNumber))
+            {
+                evnt.TrackingNumber = "no tracking number";
             }
 
             return evnt;
@@ -145,32 +151,45 @@ namespace DemoDaysApplication.Services
             evnt.StateId = model.StateId;
             evnt.TerritoryId = model.TerritoryId;
             evnt.IsActive = model.IsActive;
+            evnt.TrackingNumber = model.TrackingNumber;
 
             if (string.IsNullOrWhiteSpace(evnt.DeckUrl))
             {
                 evnt.DeckUrl = "no link";
             }
+            if (string.IsNullOrWhiteSpace(evnt.TrackingNumber))
+            {
+                evnt.TrackingNumber = "no tracking number";
+            }
 
             return evnt;
         }
 
-        public void SaveEventsAndBoothItemsForNewEvent(int eventId, ref Event_ViewModel model)
+        public void SaveEventsAndBoothItemsForNewEvent(int eventId, ref Event_ViewModel model, bool IsCreation, bool IsShipped)
         {
             List<Event_SwagItem> eventSwagItems = new List<Event_SwagItem>();
             for (int i = 0; i < model.Event_SwagItems.Count(); i++)
             {
                 Event_SwagItem eventSwagitem = new Event_SwagItem();
                 eventSwagitem.EventId = eventId;
-                eventSwagitem.QuantityBroughtToEvent = model.Event_SwagItems[i].QuantityBroughtToEvent;
-                //given away and remaining after are only for edits? maybe keep the mapping?
-                eventSwagitem.QuantityGivenAway = model.Event_SwagItems[i].QuantityGivenAway;
-                eventSwagitem.QuantityRemainingAfterEvent = eventSwagitem.QuantityBroughtToEvent - eventSwagitem.QuantityGivenAway;
+                eventSwagitem.QuantityBroughtToEvent = model.Event_SwagItems[i].QuantityBroughtToEvent;//this quantity brought is not being fed in properly
+                //given away and remaining after are only for edits? maybe keep the mapping?//
+                //PERHAPS quantity remaining after event should be set to quantity brought on event creation?
+                if (IsCreation || !IsShipped)//OR if the event is not yet shipped?
+                {
+                    eventSwagitem.QuantityRemainingAfterEvent = model.Event_SwagItems[i].QuantityBroughtToEvent;
+                }
+                else
+                {
+                    eventSwagitem.QuantityRemainingAfterEvent = model.Event_SwagItems[i].QuantityRemainingAfterEvent;//eventSwagitem.QuantityBroughtToEvent - eventSwagitem.QuantityGivenAway;
+                }
+                eventSwagitem.QuantityGivenAway = eventSwagitem.QuantityBroughtToEvent - eventSwagitem.QuantityRemainingAfterEvent;
                 //does it hurt to have these two anyway?
                 eventSwagitem.SwagItemId = model.Event_SwagItems[i].SwagItemId;
 
                 eventSwagItems.Add(eventSwagitem);
             }
-            foreach (var eventSwagItem in eventSwagItems)
+            foreach (var eventSwagItem in eventSwagItems)//could do add range here
             {
                 _context.Event_SwagItem.Add(eventSwagItem);
             }
