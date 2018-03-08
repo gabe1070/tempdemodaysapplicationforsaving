@@ -87,10 +87,10 @@ namespace DemoDaysApplication.Controllers
                 _context.Add(style);
                 await _context.SaveChangesAsync();
 
-                 _styleService.AddStyleToColorGenderSizeEntries(ref model, ref style);
+                _styleService.AddStyleToColorGenderSizeEntries(ref model, ref style);
                 await _context.SaveChangesAsync();
 
-                _styleService.AddProducts(ref model, ref style);  
+                _styleService.AddProducts(ref model, ref style);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -140,6 +140,17 @@ namespace DemoDaysApplication.Controllers
             style.Name = model.Name;
             style.ProductTypeId = model.ProductTypeId;
 
+            //begin pii
+            var currentProductEntries = _context.Product.Where(p => p.StyleId == id).ToList();//moved up here to find instance identifers to remove
+            List<int> productIds = new List<int>();
+            foreach (var product in currentProductEntries)
+            {
+                productIds.Add(product.Id);
+            }
+            var instanceIdentifiers = _context.ProductInstanceIdentifier.Where(i => productIds.Contains((int)i.ProductId)).ToList();//AAAAAAAAAAAAAAAAAAAAAAAA
+
+            _context.ProductInstanceIdentifier.RemoveRange(instanceIdentifiers);
+            //end pii
 
             //added remove ProductInstances and ProductInstance_Customer entries here as well if a style is edited, yeah pretty much have to, it becomes inaccessible anyway
             //
@@ -155,11 +166,10 @@ namespace DemoDaysApplication.Controllers
                 }
                 var customer_Instances = _context.ProductInstance_Customer.Where(pic => productInstanceIds.Contains(pic.ProductInstanceId)).ToList();
 
-                //below and probably this whole section can be factored out and re-used a lot
-                var instanceIdentifiers = _context.ProductInstanceIdentifier.Where(i => productInstanceIds.Contains((int)i.InstanceId)).ToList();//AAAAAAAAAAAAAAAAAAAAAAAA
-                
-
-                _context.ProductInstanceIdentifier.RemoveRange(instanceIdentifiers);
+                //below and probably this whole section can be factored out and re-used a lot, these product instances could have changed as product kits got
+                //edited? when a style is edited and all its products removed instances identifiers need to be removed by product id
+                //should be deleting PII by product id and not instance id?
+                //do product kit identifiers need to be removed? no editing a style does not get rid of kits only changes their products and deletes their instances
                 _context.ProductInstance.RemoveRange(productInstances);
                 _context.ProductInstance_Customer.RemoveRange(customer_Instances);
                 //deleted the product kit removal here, don't need that anymore, want to keep the product kits they will just be empty and have no corresponsingd instances
@@ -184,7 +194,7 @@ namespace DemoDaysApplication.Controllers
                 _styleService.AddStyleToColorGenderSizeEntries(ref model, ref style);
                 await _context.SaveChangesAsync();
                 //remove current products:
-                var currentProductEntries = _context.Product.Where(p => p.StyleId == id).ToList();
+                //var currentProductEntries = _context.Product.Where(p => p.StyleId == id).ToList();
                 _context.Product.RemoveRange(currentProductEntries);
                 //add new products
                 _styleService.AddProducts(ref model, ref style);
@@ -235,7 +245,7 @@ namespace DemoDaysApplication.Controllers
                 return NotFound();
             }
 
-            
+
 
             return View(style);
         }
@@ -256,23 +266,30 @@ namespace DemoDaysApplication.Controllers
             await _context.SaveChangesAsync();
             //remove current products:
             var currentProductEntries = _context.Product.Where(p => p.StyleId == id).ToList();
+
+            //begin pii
+            List<int> productIds = new List<int>();
+            foreach (var product in currentProductEntries)
+            {
+                productIds.Add(product.Id);
+            }
+            var instanceIdentifiers = _context.ProductInstanceIdentifier.Where(i => productIds.Contains((int)i.ProductId)).ToList();//AAAAAAAAAAAAAAAAAAAAAAAA
+
+            _context.ProductInstanceIdentifier.RemoveRange(instanceIdentifiers);
+            //end pii
+
             _context.Product.RemoveRange(currentProductEntries);
             //this removal hasn't really been tested much
             //delete productkits made from this style and all of their instances?
 
-            ///
+            //var currentProductEntries = _context.Product.Where(p => p.StyleId == id).ToList();//moved up here to find instance identifers to remove
+            var productKitIdentifers = _context.ProductKitIdentifier.Where(i => i.StyleId == style.Id);
+            _context.RemoveRange(productKitIdentifers);
+
             var productKits = _context.ProductKit.Where(m => m.StyleId == id).ToList();
 
             foreach (var productKit in productKits)
             {
-                //remove product kit identifier entries, also this is repiclated in delete and edit for product kit controller, refactor to avoid replication
-                var identifier = _context.ProductKitIdentifier.FirstOrDefault(i => i.ProductKitId == productKit.Id);
-                if (identifier != null)
-                {
-                    identifier.ProductKitId = null;//not sure if this is necessary
-                    identifier.IsInUse = false;
-                }
-
 
                 var productInstances = _context.ProductInstance.Where(i => i.ProductKitId == productKit.Id).ToList();
                 List<int> productInstanceIds = new List<int>();
@@ -282,9 +299,9 @@ namespace DemoDaysApplication.Controllers
                 }
                 var customer_Instances = _context.ProductInstance_Customer.Where(pic => productInstanceIds.Contains(pic.ProductInstanceId)).ToList();
 
-                var instanceIdentifiers = _context.ProductInstanceIdentifier.Where(i => productInstanceIds.Contains((int)i.InstanceId)).ToList();//AAAAAAAAAAAAAAAAAAAAAAAA
-                
-                _context.ProductInstanceIdentifier.RemoveRange(instanceIdentifiers);
+                //var instanceIdentifiers = _context.ProductInstanceIdentifier.Where(i => productInstanceIds.Contains((int)i.InstanceId)).ToList();//AAAAAAAAAAAAAAAAAAAAAAAA
+
+                //_context.ProductInstanceIdentifier.RemoveRange(instanceIdentifiers);
                 _context.ProductInstance.RemoveRange(productInstances);
                 _context.ProductInstance_Customer.RemoveRange(customer_Instances);//its ok if this is null for awhile right? or will 
                                                                                   //it throw an error cuz no productinstance_customer entries yet

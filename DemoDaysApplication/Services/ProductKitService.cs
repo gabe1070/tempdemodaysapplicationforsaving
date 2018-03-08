@@ -27,7 +27,7 @@ namespace DemoDaysApplication.Services
 
                 for (int j = 0; j < model.Quantities[i]; j++)
                 {
-                    var identifier = numberExistingInstancesOfthisProduct + j;
+                    //var identifier = numberExistingInstancesOfthisProduct + j;
                     //identifier += numInstancesRemovedFromEdit;
                     //do something like find how many product kits with this territory have these instances and 
                     //add to that number?
@@ -107,6 +107,9 @@ namespace DemoDaysApplication.Services
 
         public string AddProductKitIdentifier(ProductKit_ViewModel model, ref ProductKit productKit)
         {
+            //i think that this should only be existing productkits for this style, no need to make it territory exclusive because different territories get combined on an
+            //event but their instances need exclusive names nonetheless, WAIT no that is the case for the instances but not for the proeuct kits, where is the instance identifier
+            //creator?
             var existingProductKitsForThisStyleAndTerritory = _context.ProductKit.Where(pk => pk.TerritoryId == model.TerritoryId && pk.StyleId == model.StyleId).ToList();
 
             var existingProductKitIdentifiersForThisStyleAndTerritory = _context.ProductKitIdentifier.Where(pk => pk.TerritoryId == model.TerritoryId && pk.StyleId == model.StyleId).ToList();
