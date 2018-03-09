@@ -76,6 +76,7 @@ namespace DemoDaysApplication.Controllers
             var EventDetails_ViewModel = new EventDetails_ViewModel();
 
             EventDetails_ViewModel.Event_ViewModel = _eventService.ConvertEventToEventViewModel(@event);
+            EventDetails_ViewModel.Event_ViewModel.Budget = _context.Budget.FirstOrDefault(b => b.EventId == @event.Id);
 
             EventDetails_ViewModel.ProductKit_ViewModels = new List<ProductKit_ViewModel>();
 
@@ -382,6 +383,16 @@ namespace DemoDaysApplication.Controllers
                 await _context.SaveChangesAsync();
                 _eventService.SaveEventsAndBoothItemsForNewEvent(evnt.Id, ref model, true, false);
                 await _context.SaveChangesAsync();
+
+                var budget = new Budget
+                {
+                    EventId = evnt.Id,
+                    SponsorshipCosts = 0,
+                    EventAdditionalsCosts = 0,
+                    TravelCosts = 0,
+                    TotalCosts = 0
+                };
+
                 return RedirectToAction(nameof(Index));
             }
             return View(model);

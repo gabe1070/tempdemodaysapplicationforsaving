@@ -99,6 +99,7 @@ namespace DemoDaysApplication.Controllers
             model.Id = product.Id;
             model.Name = product.Name;
             model.TotalQuantity = product.TotalQuantity;
+            model.SKU = product.SKU;
             //is this ok? can i just pass in a few things and update those few things on the other end
             //and the rest just remains untouched?
 
@@ -120,8 +121,7 @@ namespace DemoDaysApplication.Controllers
             var product = _context.Product.FirstOrDefault(p => p.Id == model.Id);
             product.Name = model.Name;
             product.TotalQuantity = model.TotalQuantity;
-
-            var a = 5;//set a breakpoint here to make sure that the product is ok
+            product.SKU = model.SKU;
 
             if (ModelState.IsValid)
             {

@@ -64,7 +64,7 @@ namespace DemoDaysApplication.ViewModels
         public bool IsActive { get; set; }
         public bool IsShipped { get; set; }
         public string TrackingNumber { get; set; }
-
+        public Budget Budget { get; set; }
 
     }
 }

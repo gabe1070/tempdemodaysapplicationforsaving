@@ -112,6 +112,7 @@ namespace DemoDaysApplication.Services
             evnt.IsActive = true;//newly created events are always active
             evnt.IsShipped = false;
             evnt.TrackingNumber = model.TrackingNumber;
+            
 
             if (string.IsNullOrWhiteSpace(evnt.DeckUrl))
             {

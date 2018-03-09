@@ -184,6 +184,12 @@
             <dd>
                 @Html.DisplayFor(model => model.Event_ViewModel.GymName)
             </dd>
+            <dt>
+                Total Costs
+            </dt>
+            <dd>
+                @string.Format("{0:C}", Model.Event_ViewModel.Budget.TotalCosts)
+            </dd>
         </dl>
     </div>
 
@@ -191,12 +197,14 @@
     <div>
         @if (Model.Event_ViewModel.IsActive == true)
         {
-        <a asp-action="Edit" asp-route-id="@Model.Event_ViewModel.Id">Edit Event</a>
+            <a asp-action="Edit" asp-route-id="@Model.Event_ViewModel.Id">Edit Event</a>
         }
         | <a asp-action="Index">Back to List</a> |
         @*<a asp-controller="ProductKits" asp-action="ChooseStyle" asp-route-eventId="@Model.Event_ViewModel.Id">Add Product Kit</a> |*@
         <a asp-controller="Customers" asp-action="Create" asp-route-eventId="@Model.Event_ViewModel.Id">Add Customer</a> |
-        <a asp-controller="Customers" asp-action="Index" asp-route-eventId="@Model.Event_ViewModel.Id">Customers Index</a>
+        <a asp-controller="Customers" asp-action="Index" asp-route-eventId="@Model.Event_ViewModel.Id">Customers Index</a> |
+        <a asp-controller="Budgets" asp-action="Edit" asp-route-eventId="@Model.Event_ViewModel.Id">Edit Budget</a>
+
 
     </div>
 </div>
@@ -276,7 +284,7 @@
     <br /><hr class="col-slg-12" />
     @foreach (var kit in Model.ProductKit_ViewModels)
     {
-        <div style="float:left; padding-bottom:20px; margin:20px" class="col-lg-3">
+        <div style="float:left; padding-bottom:20px; margin:30px" class="col-lg-3">
 
             <table style="border:1px solid black; padding: 4px; border-spacing:5px; margin: 15px" class="col-lg-4">
                 <tr style="border:1px solid black; padding: 4px; border-spacing:5px">

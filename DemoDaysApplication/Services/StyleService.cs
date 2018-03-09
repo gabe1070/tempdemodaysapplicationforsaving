@@ -145,6 +145,7 @@ namespace DemoDaysApplication.Services
                             SizeId = size.Id,
                             ColorId = color.Id,
                             GenderId = gender.Id,
+                            SKU = ""//sku just set to nothing if you make or remake a style, these are only added in product edit later along with the total quantity
                         });
                     }
                 }

@@ -175,6 +175,10 @@ namespace DemoDaysApplication.Controllers
                 model.ProductIds.Add(product.Id);
             }
             model.Quantities = new int[model.ProductNames.Count];
+            for (int i = 0; i < model.Quantities.Length; i++)
+            {
+                model.Quantities[i] = 1;
+            }
             model.QuantitiesAvailable = new int[model.ProductNames.Count];
 
 

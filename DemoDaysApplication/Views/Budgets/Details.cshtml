@@ -1,0 +1,49 @@
+﻿@model DemoDaysApplication.Models.Budget
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Budget</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EventId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SponsorshipCosts)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SponsorshipCosts)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EventAdditionalsCosts)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EventAdditionalsCosts)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TravelCosts)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TravelCosts)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalCosts)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TotalCosts)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

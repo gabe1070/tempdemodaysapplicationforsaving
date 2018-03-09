@@ -11,9 +11,10 @@ using System;
 namespace DemoDaysApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180308181622_productsku")]
+    partial class productsku
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,26 +43,6 @@ namespace DemoDaysApplication.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BoothItem");
-                });
-
-            modelBuilder.Entity("DemoDaysApplication.Models.Budget", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("EventAdditionalsCosts");
-
-                    b.Property<int>("EventId");
-
-                    b.Property<int>("SponsorshipCosts");
-
-                    b.Property<int>("TotalCosts");
-
-                    b.Property<int>("TravelCosts");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Budget");
                 });
 
             modelBuilder.Entity("DemoDaysApplication.Models.Category", b =>

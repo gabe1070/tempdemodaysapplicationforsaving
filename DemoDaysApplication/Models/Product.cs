@@ -25,6 +25,6 @@ namespace DemoDaysApplication.Models
         public int SizeId { get; set; }
         public int ColorId { get; set; }
         public int GenderId { get; set; }
-        //public string SKU { get; set; }
+        public string SKU { get; set; }
     }
 }

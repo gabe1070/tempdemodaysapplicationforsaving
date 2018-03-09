@@ -20,18 +20,21 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    Total Inventory
-                </th>
-                <th>
-                    Available Inventory
-                </th>
-                <th>
-                    Assigned To Shipped Events
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                SKU
+            </th>
+            <th>
+                Total Inventory
+            </th>
+            <th>
+                Available Inventory
+            </th>
+            <th>
+                Assigned To Shipped Events
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -40,7 +43,10 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
-            </td>       
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SKU)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TotalQuantity)
             </td>
@@ -51,7 +57,7 @@
                 @Html.DisplayFor(modelItem => item.CheckedOutQuantity)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit Total Inventory</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
             </td>
         </tr>
 }

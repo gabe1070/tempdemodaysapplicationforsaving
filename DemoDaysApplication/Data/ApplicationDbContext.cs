@@ -43,6 +43,7 @@ namespace DemoDaysApplication.Data
         public DbSet<ProductKitIdentifier> ProductKitIdentifier { get; set; }
         public DbSet<ProductInstanceIdentifier> ProductInstanceIdentifier { get; set; }
         public DbSet<PermanentCustomer_ProductAssociationTable> PermanentCustomer_ProductAssociationTable { get; set; }
+        public DbSet<DemoDaysApplication.Models.Budget> Budget { get; set; }
 
 
         
