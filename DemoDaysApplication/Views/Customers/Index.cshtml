@@ -76,7 +76,9 @@
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" asp-route-eventId="@item.EventId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-controller="Customers" asp-action="CheckOut" asp-route-customerId="@item.Id" asp-route-eventId="@item.EventId">Check Out</a> |
+                    <a asp-controller="Customers" asp-action="CheckIn" asp-route-customerId="@item.Id">Check In</a>
                 </td>
             </tr>
         }

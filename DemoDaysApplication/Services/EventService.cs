@@ -30,6 +30,9 @@ namespace DemoDaysApplication.Services
 
             var reps = _context.FakeUsers.OrderBy(c => c.Name).Where(p => p.IsActive == true).Select(x => new { Id = x.Id, Value = x.Name });
             model.RepList = new SelectList(reps, "Id", "Value");
+
+            var eventCategories = _context.EventCategory.OrderBy(c => c.Name).Where(p => p.IsActive == true).Select(x => new { Id = x.Id, Value = x.Name });
+            model.EventCategoryList = new SelectList(eventCategories, "Id", "Value");
         }
 
         public Event_ViewModel ConvertEventToEventViewModel(Event evnt)
@@ -63,6 +66,10 @@ namespace DemoDaysApplication.Services
             model.IsActive = evnt.IsActive;
             model.IsShipped = evnt.IsShipped;
             model.TrackingNumber = evnt.TrackingNumber;
+            model.EventCategoryId = evnt.EventCategoryId;
+            model.ShippingCity = evnt.ShippingCity;
+            model.LocationCity = evnt.LocationCity;
+            model.NumberAdditionalPersonnelRequested = evnt.NumberAdditionalPersonnelRequested;
 
             //add event rep state and terr names here
             model.RepName = _context.FakeUsers.FirstOrDefault(u => u.Id == model.RepId).Name;//null ref but needs to be replaced with actual users database later anyway
@@ -77,6 +84,12 @@ namespace DemoDaysApplication.Services
             if (state != null)
             {
                 model.StateName = state.Name;
+            }
+
+            var eventCategory = _context.EventCategory.FirstOrDefault(u => u.Id == model.EventCategoryId);
+            if (eventCategory != null)
+            {
+                model.EventCategoryName = eventCategory.Name;
             }
 
             return model;
@@ -112,6 +125,10 @@ namespace DemoDaysApplication.Services
             evnt.IsActive = true;//newly created events are always active
             evnt.IsShipped = false;
             evnt.TrackingNumber = model.TrackingNumber;
+            evnt.EventCategoryId = model.EventCategoryId;
+            evnt.ShippingCity = model.ShippingCity;
+            evnt.LocationCity = model.LocationCity;
+            evnt.NumberAdditionalPersonnelRequested = model.NumberAdditionalPersonnelRequested;
             
 
             if (string.IsNullOrWhiteSpace(evnt.DeckUrl))
@@ -153,6 +170,10 @@ namespace DemoDaysApplication.Services
             evnt.TerritoryId = model.TerritoryId;
             evnt.IsActive = model.IsActive;
             evnt.TrackingNumber = model.TrackingNumber;
+            evnt.EventCategoryId = model.EventCategoryId;
+            evnt.ShippingCity = model.ShippingCity;
+            evnt.LocationCity = model.LocationCity;
+            evnt.NumberAdditionalPersonnelRequested = model.NumberAdditionalPersonnelRequested;
 
             if (string.IsNullOrWhiteSpace(evnt.DeckUrl))
             {

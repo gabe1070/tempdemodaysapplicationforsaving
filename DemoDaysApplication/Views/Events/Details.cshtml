@@ -68,6 +68,12 @@
                 @Model.Event_ViewModel.RepName
             </dd>
             <dt>
+                Category:
+            </dt>
+            <dd>
+                @Model.Event_ViewModel.EventCategoryName
+            </dd>
+            <dt>
                 Territory
             </dt>
             <dd>
@@ -86,6 +92,12 @@
                 @Html.DisplayFor(model => model.Event_ViewModel.LocationAddress)
             </dd>
             <dt>
+                Location City
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.LocationCity)
+            </dd>
+            <dt>
                 Location Zip Code
             </dt>
             <dd>
@@ -96,6 +108,12 @@
             </dt>
             <dd>
                 @Html.DisplayFor(model => model.Event_ViewModel.ShippingAddress)
+            </dd>
+            <dt>
+                Shipping City
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.ShippingCity)
             </dd>
             <dt>
                 Shipping Zip Code
@@ -190,6 +208,12 @@
             <dd>
                 @string.Format("{0:C}", Model.Event_ViewModel.Budget.TotalCosts)
             </dd>
+            <dt>
+                # Personnel Requested
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Event_ViewModel.NumberAdditionalPersonnelRequested)
+            </dd>
         </dl>
     </div>
 
@@ -278,10 +302,10 @@
 </div>
 
 
-<div style="float:left; clear:both" class="col-slg-12">
+<div style="float:left; clear:both" class="col-lg-12">
     <br />
-    <h4 style="float:left" class="col-slg-12">Product Kits</h4>
-    <br /><hr class="col-slg-12" />
+    <h4 style="float:left" class="col-lg-12">Product Kits</h4><span><i> *you can checkout here or from the customer's details page</i></span>
+    <br /><hr class="col-lg-12" />
     @foreach (var kit in Model.ProductKit_ViewModels)
     {
         <div style="float:left; padding-bottom:20px; margin:30px" class="col-lg-3">

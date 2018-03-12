@@ -8,17 +8,20 @@ using Microsoft.EntityFrameworkCore;
 using DemoDaysApplication.Data;
 using DemoDaysApplication.Models;
 using DemoDaysApplication.ViewModels;
-
+using DemoDaysApplication.Services;
 
 namespace DemoDaysApplication.Controllers
 {
     public class CustomersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private ProductKitService _productKitService;
 
-        public CustomersController(ApplicationDbContext context)
+
+        public CustomersController(ApplicationDbContext context, ProductKitService productKitService)
         {
             _context = context;
+            _productKitService = productKitService;
         }
 
         // GET: Customers
@@ -69,7 +72,7 @@ namespace DemoDaysApplication.Controllers
                 });
             }
 
-            
+
 
             return View(customerIndexViewModel);
         }
@@ -90,7 +93,7 @@ namespace DemoDaysApplication.Controllers
             }
 
             var customerDetails_ViewModel = new CustomerDetails_ViewModel();
-            
+
 
             customerDetails_ViewModel.ProductInstance_ViewModels = new List<ProductInstance_ViewModel>();
 
@@ -118,7 +121,7 @@ namespace DemoDaysApplication.Controllers
 
             var gender = _context.Gender.FirstOrDefault(g => g.Id == customer.GenderId);
             var genderName = "";
-            if(gender != null)
+            if (gender != null)
             {
                 genderName = gender.Name;
             }
@@ -323,11 +326,54 @@ namespace DemoDaysApplication.Controllers
 
         }
 
+        // GET: ProductKits/Checkout/5
+        public async Task<IActionResult> CheckOut(int? customerId, int? eventId)
+        {
+            if (customerId == null || eventId == null)
+            {
+                return NotFound();
+            }
+
+            var customer = await _context.Customer.SingleOrDefaultAsync(m => m.Id == customerId);
+            var evnt = await _context.Event.SingleOrDefaultAsync(e => e.Id == eventId);
+            if (customer == null || evnt == null)
+            {
+                return NotFound();
+            }
+
+            //if i want accurate identifiers here i can like loop through all the isntances of a given product and 
+            //event for each product they have checked out, incrementing an identifier up for each one and then assigning
+            //that identifer to this model instnace name once i get to it in the instances incrementing for loop
+
+            var model = new CustomerCheckOut_ViewModel();
+            model.CustomerId = customer.Id;
+            model.CustomerName = customer.FirstName + " " + customer.LastName;
+            model.EventId = evnt.Id;
+            model.EventName = evnt.Name;
+
+            var productKitsForThisEvent = _context.ProductKit.Where(pk => pk.EventId == evnt.Id).ToList();
+            var productInstances = new List<ProductInstance>();
+            foreach (var productKit in productKitsForThisEvent)
+            {
+                productInstances.AddRange(_context.ProductInstance.Where(i => i.ProductKitId == productKit.Id));
+            }
+            var productInstancesList = productInstances.Where(p => p.CheckedOut == false).Select(x => new { Id = x.Id, Value = x.Name });
+            model.ProductInstanceList = new SelectList(productInstancesList, "Id", "Value");
+
+            return View(model);
+
+        }
+
         // POST: ProductKits/Checkout/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CheckIn(CheckIn_ViewModel model)
         {
+            if(model.productInstances == null)
+            {
+                return RedirectToAction("Details", "Customers", new { id = model.CustomerId });
+            }
+
             //first clear out all the instance_customer entries with this instances id
             var customer_ProductInstances_ForRemoval = new List<ProductInstance_Customer>();
             for (int i = 0; i < model.productInstances.Count(); i++)
@@ -356,6 +402,71 @@ namespace DemoDaysApplication.Controllers
 
                 await _context.SaveChangesAsync();
             }
+
+            if (customer_ProductInstances_ForRemoval.Count != 0)
+            {
+                _context.ProductInstance_Customer.RemoveRange(customer_ProductInstances_ForRemoval);//this is removing all the old customer_productInstances (but not before adding the new ones
+            }
+            await _context.SaveChangesAsync();
+
+
+
+            if (ModelState.IsValid)//this should probably be higher up on the page...
+            {
+                return RedirectToAction("Details", "Customers", new { id = model.CustomerId });
+            }
+            return View(model);
+
+        }
+
+        // POST: ProductKits/Checkout/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CheckOut(CustomerCheckOut_ViewModel model)
+        {
+            //what am i updating on a checkout?
+            //productInstance_Customer relationships (not both checking in and out here, only checking out, so only adding these, not removing existing entries?)
+            //but these might have been checked out before so they will have productinstance_customer enries potentially
+            //productInstance = checked out changes
+            if(model.ProductInstanceIds == null)
+            {
+                return RedirectToAction("Details", "Customers", new { id = model.CustomerId });
+            }
+
+            var permanentEntries = new List<PermanentCustomer_ProductAssociationTable>();
+            var customer_ProductInstances_ForRemoval = new List<ProductInstance_Customer>();
+            //first clear out all the instance_customer entries with this instances id
+            for (int i = 0; i < model.ProductInstanceIds.Count(); i++)
+            {
+                var CPIForRemoval = _context.ProductInstance_Customer.FirstOrDefault(pic => pic.ProductInstanceId == model.ProductInstanceIds[i]);//i could find all productinstance_customer entries all at once with just the customer id
+                if (CPIForRemoval != null)
+                {
+                    customer_ProductInstances_ForRemoval.Add(CPIForRemoval);
+                }
+
+                var instance = _context.ProductInstance.FirstOrDefault(pi => pi.Id == model.ProductInstanceIds[i]);
+                if (instance != null)
+                {
+                    instance.CheckedOut = true;//if it's selected it's getting checked out, it's not like with other checkout where some of the products getting passed in are being checked in//model.productInstances[i].CheckedOut;
+                }
+                _context.Update(instance);
+
+                //yeah I'm adding all of the product_instance_customer entries back in
+                //because on checkin you dont get rid of those you just change their
+                //respective instance checkins based on selection
+                _context.ProductInstance_Customer.Add(new ProductInstance_Customer
+                {
+                    ProductInstanceId = instance.Id,
+                    CustomerId = model.CustomerId
+                });
+
+                await _context.SaveChangesAsync();
+
+                _productKitService.UploadPermanentInfo(model, ref permanentEntries, instance);
+            }
+
+            _context.PermanentCustomer_ProductAssociationTable.AddRange(permanentEntries);
+            _context.SaveChanges();
 
             if (customer_ProductInstances_ForRemoval.Count != 0)
             {

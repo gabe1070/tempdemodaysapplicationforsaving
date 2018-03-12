@@ -47,6 +47,12 @@ namespace DemoDaysApplication.Models
         public bool IsActive { get; set; }
         public bool IsShipped { get; set; }
         public string TrackingNumber { get; set; }
+        public int EventCategoryId { get; set; }
+
+        public string LocationCity { get; set; }
+        public string ShippingCity { get; set; }
+        public string NumberAdditionalPersonnelRequested { get; set; }
+
 
     }
 }

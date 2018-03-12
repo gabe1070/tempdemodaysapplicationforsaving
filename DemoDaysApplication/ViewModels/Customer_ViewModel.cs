@@ -43,6 +43,7 @@ namespace DemoDaysApplication.ViewModels
     {
         public Customer_ViewModel Customer_ViewModel { get; set; }
         public List<ProductInstance_ViewModel> ProductInstance_ViewModels { get; set; }
+        
         //above has productkitId and productId so can feed in info needed to have checkin
         //button for this customer. is it worth it though? maybe just check what they 
         //have checked out on this page and then you can go back to the event details,

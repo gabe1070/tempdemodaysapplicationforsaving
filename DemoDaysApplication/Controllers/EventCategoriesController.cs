@@ -7,27 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DemoDaysApplication.Data;
 using DemoDaysApplication.Models;
-using DemoDaysApplication.ViewModels;
-
 
 namespace DemoDaysApplication.Controllers
 {
-    public class TerritoriesController : Controller
+    public class EventCategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TerritoriesController(ApplicationDbContext context)
+        public EventCategoriesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Territories
+        // GET: EventCategories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Territory.ToListAsync());
+            return View(await _context.EventCategory.ToListAsync());
         }
 
-        // GET: Territories/Details/5
+        // GET: EventCategories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,61 +33,39 @@ namespace DemoDaysApplication.Controllers
                 return NotFound();
             }
 
-            var territory = await _context.Territory
+            var eventCategory = await _context.EventCategory
                 .SingleOrDefaultAsync(m => m.Id == id);
-            if (territory == null)
+            if (eventCategory == null)
             {
                 return NotFound();
             }
 
-            var model = new TerritoryDetailsViewModel();
-            model.Id = (int)id;
-            model.IsActive = territory.IsActive;
-            model.Name = territory.Name;
-            model.States = _context.State.Where(s => s.TerritoryId == territory.Id).ToList();
-
-            return View(model);
+            return View(eventCategory);
         }
 
-        // GET: Territories/Create
+        // GET: EventCategories/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Territories/Create
+        // POST: EventCategories/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,IsActive")] Territory territory)
+        public async Task<IActionResult> Create([Bind("Id,Name,IsActive")] EventCategory eventCategory)
         {
-            var TerritorySwagItems = new List<TerritorySwagItem>();//make one per swag item
-            var swagItems = _context.SwagItem.ToList();
-
             if (ModelState.IsValid)
             {
-                _context.Add(territory);
+                _context.Add(eventCategory);
                 await _context.SaveChangesAsync();
-
-                foreach (var swagItem in swagItems)
-                {
-                    TerritorySwagItems.Add(new TerritorySwagItem
-                    {
-                        SwagItemId = swagItem.Id,
-                        TerritoryId = territory.Id,
-                        QuantityInTerritoryInventory = 0
-                    });
-                }
-                _context.AddRange(TerritorySwagItems);
-                await _context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
             }
-            return View(territory);
+            return View(eventCategory);
         }
 
-        // GET: Territories/Edit/5
+        // GET: EventCategories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -97,22 +73,22 @@ namespace DemoDaysApplication.Controllers
                 return NotFound();
             }
 
-            var territory = await _context.Territory.SingleOrDefaultAsync(m => m.Id == id);
-            if (territory == null)
+            var eventCategory = await _context.EventCategory.SingleOrDefaultAsync(m => m.Id == id);
+            if (eventCategory == null)
             {
                 return NotFound();
             }
-            return View(territory);
+            return View(eventCategory);
         }
 
-        // POST: Territories/Edit/5
+        // POST: EventCategories/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsActive")] Territory territory)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,IsActive")] EventCategory eventCategory)
         {
-            if (id != territory.Id)
+            if (id != eventCategory.Id)
             {
                 return NotFound();
             }
@@ -121,12 +97,12 @@ namespace DemoDaysApplication.Controllers
             {
                 try
                 {
-                    _context.Update(territory);
+                    _context.Update(eventCategory);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TerritoryExists(territory.Id))
+                    if (!EventCategoryExists(eventCategory.Id))
                     {
                         return NotFound();
                     }
@@ -137,12 +113,41 @@ namespace DemoDaysApplication.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(territory);
+            return View(eventCategory);
         }
 
-        private bool TerritoryExists(int id)
+        // GET: EventCategories/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-            return _context.Territory.Any(e => e.Id == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var eventCategory = await _context.EventCategory
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (eventCategory == null)
+            {
+                return NotFound();
+            }
+
+            return View(eventCategory);
+        }
+
+        // POST: EventCategories/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var eventCategory = await _context.EventCategory.SingleOrDefaultAsync(m => m.Id == id);
+            _context.EventCategory.Remove(eventCategory);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool EventCategoryExists(int id)
+        {
+            return _context.EventCategory.Any(e => e.Id == id);
         }
     }
 }

@@ -44,9 +44,11 @@ namespace DemoDaysApplication.Data
         public DbSet<ProductInstanceIdentifier> ProductInstanceIdentifier { get; set; }
         public DbSet<PermanentCustomer_ProductAssociationTable> PermanentCustomer_ProductAssociationTable { get; set; }
         public DbSet<DemoDaysApplication.Models.Budget> Budget { get; set; }
+        public DbSet<DemoDaysApplication.Models.EventCategory> EventCategory { get; set; }
+        public DbSet<TerritorySwagItem> TerritorySwagItem { get; set; }
 
 
-        
+
 
 
     }

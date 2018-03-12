@@ -1,0 +1,43 @@
+﻿@model DemoDaysApplication.ViewModels.TerritorySwagItemEdit_ViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+<h4><b>SwagItem:</b> @Model.SwagName <br /> <b>Territory:</b> @Model.TerritoryName</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="TerritorySwagItemsEdit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TerritorySwagItemId" />
+            <div class="form-group">
+                <label asp-for="QuantityInTerritoryInventory" class="control-label">Quantity to Add to Territory Inventory</label>
+                <input asp-for="QuantityInTerritoryInventory" class="form-control" />
+                <span asp-validation-for="QuantityInTerritoryInventory" class="text-danger"></span><span><i> *this will draw automatically from the Black Diamond Master inventory of swag items if the below is checked. If you need to reverse a request, you can insert a negative number here with the below checked, which will add the inventory back to bd master</i></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="QuantityDrawnFromBlackDiamondMasterSwagInventory" /> Is this quantity being drawn from, or added back to (with a negative number) the Black Diamond Master Swag Inventory?
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

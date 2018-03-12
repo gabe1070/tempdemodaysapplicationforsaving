@@ -31,6 +31,10 @@ namespace DemoDaysApplication.ViewModels
         public SelectList TerritoryList { get; set; }
         public string TerritoryName { get; set; }
 
+        public int EventCategoryId { get; set; }
+        public SelectList EventCategoryList { get; set; }
+        public string EventCategoryName { get; set; }
+
         public int StateId { get; set; }
         public SelectList StateList { get; set; }
         public string StateName { get; set; }
@@ -65,6 +69,10 @@ namespace DemoDaysApplication.ViewModels
         public bool IsShipped { get; set; }
         public string TrackingNumber { get; set; }
         public Budget Budget { get; set; }
+
+        public string LocationCity { get; set; }
+        public string ShippingCity { get; set; }
+        public string NumberAdditionalPersonnelRequested { get; set; }
 
     }
 }

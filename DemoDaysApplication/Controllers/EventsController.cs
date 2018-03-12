@@ -166,8 +166,6 @@ namespace DemoDaysApplication.Controllers
                 EventDetails_ViewModel.ProductKit_ViewModels.Add(productKit_ViewModel);
             }
 
-            //ADDED
-            //ADDED BEGIN
             var swagItemsFromThisEvent = _context.Event_SwagItem.Where(es => es.EventId == id).ToList();
             var numSwagItemsOnThisEvent = swagItemsFromThisEvent.Count();
 
@@ -204,8 +202,6 @@ namespace DemoDaysApplication.Controllers
                 });
             }
 
-            //ADDED END
-            //END
 
             return View(EventDetails_ViewModel);
         }
@@ -227,7 +223,7 @@ namespace DemoDaysApplication.Controllers
             if (ModelState.IsValid)
             {
                 var eventSwagItems = _context.Event_SwagItem.Where(s => s.EventId == @event.Id).ToList();
-                var allSwagItems = _context.SwagItem.ToList();
+                var territorySwagItems = _context.TerritorySwagItem.Where(tsi => tsi.TerritoryId == @event.TerritoryId).ToList();
 
                 if (shippedId == 1)
                 {
@@ -236,10 +232,12 @@ namespace DemoDaysApplication.Controllers
 
                     foreach (var event_SwagItem in eventSwagItems)
                     {
-                        var swagItem = allSwagItems.FirstOrDefault(s => s.Id == event_SwagItem.SwagItemId);
-                        if(swagItem != null)
+                        foreach (var territorySwagItem in territorySwagItems)
                         {
-                            swagItem.TotalQuantityInInventory -= event_SwagItem.QuantityBroughtToEvent;//quantity given away
+                            if (event_SwagItem.SwagItemId == territorySwagItem.SwagItemId)
+                            {
+                                territorySwagItem.QuantityInTerritoryInventory -= event_SwagItem.QuantityBroughtToEvent;          
+                            }
                         }
                     }
                 }
@@ -250,10 +248,12 @@ namespace DemoDaysApplication.Controllers
 
                     foreach (var event_SwagItem in eventSwagItems)
                     {
-                        var swagItem = allSwagItems.FirstOrDefault(s => s.Id == event_SwagItem.SwagItemId);
-                        if (swagItem != null)
+                        foreach (var territorySwagItem in territorySwagItems)
                         {
-                            swagItem.TotalQuantityInInventory += event_SwagItem.QuantityBroughtToEvent;//quantity given away
+                            if (event_SwagItem.SwagItemId == territorySwagItem.SwagItemId)
+                            {
+                                territorySwagItem.QuantityInTerritoryInventory += event_SwagItem.QuantityBroughtToEvent;
+                            }
                         }
                     }
                 }
@@ -264,7 +264,7 @@ namespace DemoDaysApplication.Controllers
             }
 
             TempData["notice"] = "Error On Ship or Un-Ship Attempt";
-            return RedirectToAction("Details", "Events", new { id = eventId });//this should be some kind of error
+            return RedirectToAction("Details", "Events", new { id = eventId });
         }
 
         public async Task<IActionResult> Finish(int? eventId, int? shippedId, int? activeId)
@@ -284,7 +284,7 @@ namespace DemoDaysApplication.Controllers
             if (ModelState.IsValid)
             {
                 var eventSwagItems = _context.Event_SwagItem.Where(s => s.EventId == @event.Id).ToList();
-                var allSwagItems = _context.SwagItem.ToList();
+                var territorySwagItems = _context.TerritorySwagItem.Where(tsi => tsi.TerritoryId == @event.TerritoryId).ToList();
 
                 if (shippedId == 0 && activeId == 0)
                 {
@@ -294,10 +294,12 @@ namespace DemoDaysApplication.Controllers
 
                     foreach (var event_SwagItem in eventSwagItems)
                     {
-                        var swagItem = allSwagItems.FirstOrDefault(s => s.Id == event_SwagItem.SwagItemId);
-                        if (swagItem != null)
+                        foreach (var territorySwagItem in territorySwagItems)
                         {
-                            swagItem.TotalQuantityInInventory += event_SwagItem.QuantityRemainingAfterEvent;
+                            if (event_SwagItem.SwagItemId == territorySwagItem.SwagItemId)
+                            {
+                                territorySwagItem.QuantityInTerritoryInventory += event_SwagItem.QuantityRemainingAfterEvent;
+                            }
                         }
                     }
                 }
@@ -309,10 +311,12 @@ namespace DemoDaysApplication.Controllers
 
                     foreach (var event_SwagItem in eventSwagItems)
                     {
-                        var swagItem = allSwagItems.FirstOrDefault(s => s.Id == event_SwagItem.SwagItemId);
-                        if (swagItem != null)
+                        foreach (var territorySwagItem in territorySwagItems)
                         {
-                            swagItem.TotalQuantityInInventory -= event_SwagItem.QuantityRemainingAfterEvent;
+                            if (event_SwagItem.SwagItemId == territorySwagItem.SwagItemId)
+                            {
+                                territorySwagItem.QuantityInTerritoryInventory -= event_SwagItem.QuantityRemainingAfterEvent;
+                            }
                         }
                     }
                 }
@@ -323,7 +327,7 @@ namespace DemoDaysApplication.Controllers
             }
 
             TempData["notice"] = "Error On Ship or Un-Ship Attempt";
-            return RedirectToAction("Details", "Events", new { id = eventId });//this should be some kind of error
+            return RedirectToAction("Details", "Events", new { id = eventId });
         }
 
         // GET: Events/Create
@@ -332,6 +336,9 @@ namespace DemoDaysApplication.Controllers
             var model = new Event_ViewModel();
 
             _eventService.PopulateDropDowns(ref model);
+            model.StartDate = DateTime.Now;
+            model.EndDate = DateTime.Now;
+            model.RequestedShipDate = DateTime.Now;
 
             //begin populating view model lists of all swag items and swag items for the event, should be same number so made here
             //and then same for booths
@@ -392,6 +399,8 @@ namespace DemoDaysApplication.Controllers
                     TravelCosts = 0,
                     TotalCosts = 0
                 };
+                _context.Add(budget);
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }

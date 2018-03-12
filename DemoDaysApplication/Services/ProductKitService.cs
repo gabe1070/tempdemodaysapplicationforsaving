@@ -162,6 +162,18 @@ namespace DemoDaysApplication.Services
 
         }
 
+        public void UploadPermanentInfo(CustomerCheckOut_ViewModel model, ref List<PermanentCustomer_ProductAssociationTable> permanentEntries, ProductInstance instance)
+        {
+            CheckOut_ViewModel checkOutModel = new CheckOut_ViewModel();
+            checkOutModel.CustomerIds = new int[1];
+            checkOutModel.CustomerIds[0] = model.CustomerId;
+            checkOutModel.productInstances = new List<ProductInstance>();//_context.ProductInstance.Where(p => model.ProductInstanceIds.Contains(p.Id)).ToList();//works?
+            checkOutModel.productInstances.Add(instance);
+            int i = 0;
+            checkOutModel.EventId = model.EventId;
+            UploadPermanentInfo(checkOutModel, ref permanentEntries, i);
+        }
+
         public void UploadPermanentInfo(CheckOut_ViewModel model, ref List<PermanentCustomer_ProductAssociationTable> permanentEntries, int i)
         {
             var customer = _context.Customer.FirstOrDefault(c => c.Id == model.CustomerIds[i]);
@@ -184,7 +196,7 @@ namespace DemoDaysApplication.Services
                     PhoneNumber = customer.PhoneNumber,
                     Notes = customer.Notes,
                     CustomerGender = customerGender.Name,
-                    Age = customer.Age, 
+                    Age = customer.Age,
                     EventName = evnt.Name,
                     OriginalProductId = product.Id,
                     ProductName = product.Name,

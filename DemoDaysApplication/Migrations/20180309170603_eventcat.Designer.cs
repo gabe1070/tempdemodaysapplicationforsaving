@@ -11,9 +11,10 @@ using System;
 namespace DemoDaysApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180309170603_eventcat")]
+    partial class eventcat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,23 +168,17 @@ namespace DemoDaysApplication.Migrations
 
                     b.Property<string>("LocationAddress");
 
-                    b.Property<string>("LocationCity");
-
                     b.Property<string>("LocationZipCode");
 
                     b.Property<string>("Name");
 
                     b.Property<string>("Notes");
 
-                    b.Property<string>("NumberAdditionalPersonnelRequested");
-
                     b.Property<int>("RepId");
 
                     b.Property<DateTimeOffset>("RequestedShipDate");
 
                     b.Property<string>("ShippingAddress");
-
-                    b.Property<string>("ShippingCity");
 
                     b.Property<string>("ShippingZipCode");
 
@@ -584,22 +579,6 @@ namespace DemoDaysApplication.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Territory");
-                });
-
-            modelBuilder.Entity("DemoDaysApplication.Models.TerritorySwagItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("QuantityInTerritoryInventory");
-
-                    b.Property<int>("SwagItemId");
-
-                    b.Property<int>("TerritoryId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TerritorySwagItem");
                 });
 #pragma warning restore 612, 618
         }

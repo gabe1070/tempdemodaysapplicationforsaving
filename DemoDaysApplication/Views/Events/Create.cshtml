@@ -35,6 +35,12 @@
                 </div>
             </div>
             <div class="form-group">
+                <label asp-for="EventCategoryId" class="control-label">Category</label>
+                <div>
+                    <select asp-for="EventCategoryId" asp-items="@Model.EventCategoryList" class="form-control"></select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label asp-for="StartDate" class="control-label">Start Date</label>
                 <input asp-for="StartDate" class="form-control" />
                 <span asp-validation-for="StartDate" class="text-danger"></span>
@@ -55,6 +61,11 @@
                 <span asp-validation-for="LocationAddress" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="LocationCity" class="control-label">Location City</label>
+                <input asp-for="LocationCity" class="form-control" />
+                <span asp-validation-for="LocationCity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="LocationZipCode" class="control-label">Location Zip Code</label>
                 <input asp-for="LocationZipCode" class="form-control" />
                 <span asp-validation-for="LocationZipCode" class="text-danger"></span>
@@ -63,6 +74,11 @@
                 <label asp-for="ShippingAddress" class="control-label">Shipping Address</label>
                 <input asp-for="ShippingAddress" class="form-control" />
                 <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShippingCity" class="control-label">Shipping City</label>
+                <input asp-for="ShippingCity" class="form-control" />
+                <span asp-validation-for="ShippingCity" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ShippingZipCode" class="control-label">Shipping Zip Code</label>
@@ -131,6 +147,11 @@
                 <input asp-for="GymName" class="form-control" />
                 <span asp-validation-for="GymName" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="NumberAdditionalPersonnelRequested" class="control-label"># Additional Personnel Requested</label>
+                <input asp-for="NumberAdditionalPersonnelRequested" class="form-control" />
+                <span asp-validation-for="NumberAdditionalPersonnelRequested" class="text-danger"></span>
+            </div>
 
             <div class="form-group">
                 <input type="hidden" asp-for="@Model.IsActive" />
@@ -138,56 +159,56 @@
 
             <h5><b>Swag Items:</b></h5>
             @for (int i = 0; i < Model.Event_SwagItems.Count; i++)
-            {
-                @Model.Event_SwagItems[i].SwagItemName
-                <span> Qty: </span>
-                <div class="form-group">
-                    <input asp-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="form-control" />
-                    <span asp-validation-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="text-danger"></span>
-                </div>
+    {
+        @Model.Event_SwagItems[i].SwagItemName
+        <span> Qty: </span>
+        <div class="form-group">
+            <input asp-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="form-control" />
+            <span asp-validation-for="@Model.Event_SwagItems[i].QuantityBroughtToEvent" class="text-danger"></span>
+        </div>
 
-                //and then the hidden stuff
+//and then the hidden stuff
 
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].Id" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityGivenAway" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemId" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemName" />
-                </div>
-            }
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Event_SwagItems[i].Id" />
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityGivenAway" />
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Event_SwagItems[i].QuantityRemainingAfterEvent" />
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemId" />
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Event_SwagItems[i].SwagItemName" />
+        </div>
+}
             <br />
 
             <h5><b>Booth Items:</b></h5>
             @for (int i = 0; i < Model.Event_BoothItems.Count; i++)
-            {
-                @Model.Event_BoothItems[i].BoothItemName
-                <span> Qty: </span>
-                <div class="form-group">
-                    <input asp-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="form-control" />
-                    <span asp-validation-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="text-danger"></span>
-                </div>
+    {
+        @Model.Event_BoothItems[i].BoothItemName
+        <span> Qty: </span>
+        <div class="form-group">
+            <input asp-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="form-control" />
+            <span asp-validation-for="@Model.Event_BoothItems[i].QuantityAtEvent" class="text-danger"></span>
+        </div>
 
-                //and then the hidden stuff:
+//and then the hidden stuff:
 
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].Id" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemId" />
-                </div>
-                <div class="form-group">
-                    <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemName" />
-                </div>
-            }
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Event_BoothItems[i].Id" />
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemId" />
+        </div>
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.Event_BoothItems[i].BoothItemName" />
+        </div>
+}
             <br />
 
 

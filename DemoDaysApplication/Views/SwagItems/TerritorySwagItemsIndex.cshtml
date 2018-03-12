@@ -1,0 +1,88 @@
+﻿@model DemoDaysApplication.ViewModels.TerritorySwagItemIndex_ViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Swag Item Inventories By Territory</h2>
+
+<div class="editor-field col-lg-3">
+    <label asp-for="TerritoryId" class="control-label">Territory</label>
+    <br />
+    @Html.DropDownList("TerritoryId", Model.TerritoryList, "Select Territory", new { @class = "form-control" })
+    <br />
+
+    @*@Html.DropDownList("StateId", Enumerable.Empty<SelectListItem>(), "States", new { @disabled = "disabled", @class = "form-control" })delete later*@
+
+
+</div>
+
+@*<div>
+        <a asp-area="" asp-controller="SwagItems" asp-action="TerritorySwagItemsIndex" asp-route-territoryId="@Html.terr">Submit</a>
+
+    </div>*@
+
+
+
+@*<div>
+        <div id="div2">Database data.</div>
+    </div>*@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Color
+            </th>
+            <th>
+                Size
+            </th>
+            <th>
+                Quantity In Territory Inventory
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody id="div3"></tbody>
+
+</table>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#TerritoryId').change(function () {
+                $.ajax({
+                    url: '/SwagItems/PopulateSwagItemsByTerritory',
+                    type: 'POST',
+                    data: { territoryId: $(this).val() },
+                    datatype: 'html',
+                    success: function (data) {
+
+                        $("#div3").html('');
+                        $("#div3").append(data);
+                    }
+                });
+            });
+
+            $.ajax({
+                url: '/SwagItems/PopulateSwagItemsByTerritory',
+                type: 'POST',
+                data: { territoryId: @Model.TerritoryId },
+                datatype: 'html',
+                success: function (data) {
+
+                    $("#div3").html('');
+                    $("#div3").append(data);
+                }
+            });
+        });
+    </script>
+}

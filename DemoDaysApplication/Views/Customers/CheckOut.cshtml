@@ -1,0 +1,48 @@
+﻿@model DemoDaysApplication.ViewModels.CustomerCheckOut_ViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Check Out for @Model.CustomerName</h2>
+
+<h4></h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CheckOut">
+            @*not sure if correct*@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*@foreach (var product in Model.products)
+                {*@
+
+            <h4><b>Customer:</b> @Model.CustomerName</h4>
+            <div class="form-group">
+                <label asp-for="ProductInstanceIds" class="control-label">Available Items To Checkout:</label>
+                <span style="color:red"><i>*hold ctrl and select every product instance you want to check out to this customer</i></span>
+                <select asp-for="ProductInstanceIds" asp-items="@Model.ProductInstanceList" class="form-control" style="min-height: 550px; min-width: 500px;"></select>
+            </div>
+
+            <hr />
+            @*}*@
+            <input type="hidden" asp-for="@Model.EventId" />
+            <input type="hidden" asp-for="@Model.CustomerId" />
+            <input type="hidden" asp-for="@Model.EventName" />
+            <input type="hidden" asp-for="@Model.CustomerName" />
+
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.CustomerId">Back to Customer Details</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

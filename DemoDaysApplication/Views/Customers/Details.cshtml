@@ -72,11 +72,24 @@
     </div>
 
     <a asp-controller="Customers" asp-action="CheckIn" asp-route-customerId="@Model.Customer_ViewModel.Id">Check In This Customer</a>
+    <hr />
 }
 
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Customer_ViewModel.Id">Edit</a> |
-    <a asp-action="Index" asp-route-eventId="@Model.Customer_ViewModel.EventId">Back to List</a>
+    <a asp-controller="Customers" asp-action="CheckOut" asp-route-customerId="@Model.Customer_ViewModel.Id" asp-route-eventId="@Model.Customer_ViewModel.EventId">Check Out</a>
+    <br /><br />
 </div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Customer_ViewModel.Id">Edit Customer Details</a> |
+    <a asp-action="Index" asp-route-eventId="@Model.Customer_ViewModel.EventId">Back to Customer List</a>
+</div>
+
+
+
+
+
+
+
 
 
